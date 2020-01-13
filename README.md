@@ -38,12 +38,12 @@ Usage
 A recent version of a modern web browser is required.
 [Firefox](https://www.mozilla.org/firefox/) is recommended.
 
-Simply go to <https://note-tab.bnay.me/>.  You can also clone the Git repository
-and run it locally.
+Simply go to <https://note-tab.bnay.me/>.  To save a note to the location bar,
+either click on `#` at the top-right or press Ctrl+Enter/Command+Enter.  (If
+the note's title is focused, you can simply press Enter.)
 
-To save a note to the location bar, either click on `#` at the top-right or
-press Ctrl+Enter/Command+Enter.  (If the note's title is focused, you can simply
-press Enter.)
+You can also clone the Git repository and run the app locally.  However, that
+requires you to use a local Web server instead of the file: URL scheme.
 
 
 License and Privacy
