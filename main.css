@@ -1,0 +1,82 @@
+/* Base */
+
+/* Eventually, modern browsers will support CSS 4 System Colors
+ * (https://www.w3.org/TR/css-color-4/#css-system-colors).  Until
+ * then, browser-specific stuff is needed.
+ *
+ * See:
+ * <https://bugzilla.mozilla.org/show_bug.cgi?id=1590894>
+ * <https://bugs.chromium.org/p/chromium/issues/detail?id=1015968#makechanges>
+ * <https://www.chromestatus.com/feature/5678291530809344>
+ * */
+
+:root {
+ --color-background: Window;
+ --color-foreground: WindowText;
+ --color-inactive: GrayText;
+ --color-active: Highlight;
+ --font-main: caption;
+}
+
+:root.gecko {
+ --color-background: -moz-field;
+ --color-foreground: -moz-fieldtext;
+}
+
+:root.webkit {
+ --color-active: -webkit-link;
+}
+
+body, input, textarea {
+ background: var(--color-background);
+ color: var(--color-foreground);
+ font: var(--font-main);
+}
+input, textarea {
+ background: transparent;
+}
+a, a:hover, a:visited {
+ color: var(--color-active);
+ text-decoration: none;
+}
+a:hover {
+ text-decoration: underline;
+}
+
+
+/* App */
+
+#title, #body {
+ display: block;
+ border: none;
+ border-bottom: 2px solid var(--color-inactive);
+}
+#title:focus, #body:focus {
+ border-bottom-color: var(--color-active);
+ outline: none;
+}
+#title, #toolbar a {
+ font-size: 2em;
+ width: auto;
+}
+#toolbar {
+ position: absolute; top: 0.625em; right: 0.5em;
+ margin: 0 0.5em;
+ color: var(--color-active);
+}
+#toolbar a {
+ margin-left: 0.5em;
+ text-decoration: none;
+ /* `a { color: -webkit-link; }` causes visited links to be colored differently */
+ color: inherit;
+}
+#link {
+ transform: rotate(45deg);
+}
+#body {
+ margin-top: 1em;
+ width: 100%;
+ max-height: calc(100vh - 5em);
+ line-height: 1.25;
+ resize: none;
+}

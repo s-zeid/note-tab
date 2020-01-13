@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8" />
+  <title>Note Tab</title>
+  <link rel="stylesheet" type="text/css" href="main.css" />
+  <script type="module" src="main.js"></script>
+ </head>
+ <body>
+  <div id="loading-error">
+   This app requires
+   <a href="https://www.mozilla.org/firefox/" target="_blank">
+    a modern Web browser
+   </a>
+   with JavaScript enabled.
+  </div>
+  <app-container style="display: none;">
+   <main>
+    <div id="toolbar">
+     <a id="link" href="#" title="Save to location bar ({0}+Enter) ({1} for permalink)">#</a>
+     <a id="new" href="#type={0}" title="New {0}" target="_blank">+</a>
+    </div>
+    <input id="saved" type="hidden" value="true" />
+    <input id="type" type="hidden" data-default="note" />
+    <input id="title" type="text" placeholder="New {0}" />
+    <textarea id="body" placeholder="Details..."></textarea>
+   </main>
+  </app-container>
+ </body>
+</html>
