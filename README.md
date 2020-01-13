@@ -12,7 +12,7 @@ Contents
 
 * [Features](#features)
 * [Usage](#usage)
-* [License / Privacy](#license-privacy)
+* [License and Privacy](#license-and-privacy)
 
 
 Features
@@ -46,8 +46,8 @@ press Ctrl+Enter/Command+Enter.  (If the note's title is focused, you can simply
 press Enter.)
 
 
-License / Privacy
------------------
+License and Privacy
+-------------------
 
 This add-on is [free software](https://www.gnu.org/philosophy/free-sw.html)
 released under the X11 License.  [Its source code may be found on
