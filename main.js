@@ -113,7 +113,7 @@ class App {
  saveOnKeyUp(e) {
   let isTitle = e.target === this.els.title;
   if ((e.ctrlKey || e.metaKey || isTitle) && e.code.match(/^(Numpad)?Enter$/))
-   return this.els.link.click();
+   return this.save();
  }
  
  main() {
@@ -162,8 +162,10 @@ class App {
   
   Utils.autoResizeTextarea(this.els.body);
   
-  if (!this.els.title.value && !this.els.body.value)
+  if (!this.els.title.value && !this.els.body.value) {
+   this.save();
    this.els.title.focus();
+  }
  }
 }
 
