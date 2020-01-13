@@ -49,7 +49,7 @@ press Enter.)
 License and Privacy
 -------------------
 
-This add-on is [free software](https://www.gnu.org/philosophy/free-sw.html)
+This program is [free software](https://www.gnu.org/philosophy/free-sw.html)
 released under the X11 License.  [Its source code may be found on
 GitLab.](https://code.s.zeid.me/note-tab)  All data is processed on your own
 device (i.e. not sent anywhere) and no tracking or analytics scripts are used.
