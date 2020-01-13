@@ -3,6 +3,9 @@ export class StructuredCloneHash {
  // browsers' session storage files, for the benefit of session recovery scripts.
  // Any actual null bytes in the data contained in `hash` should be escaped,
  // e.g. with `encodeURIComponent()`.
+ // 
+ // Example: <https://code.s.zeid.me/bin/blob/master/sessionstore2html>
+ // (search for "note_tab_magic")
  
  static decode(hash, uuid) {
   if (uuid && !hash.startsWith("urn:uuid:" + uuid))
