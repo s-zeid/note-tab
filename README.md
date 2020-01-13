@@ -19,7 +19,7 @@ Features
 --------
 
 * Simple UI that adapts to your system colors when possible (in Firefox for now).
-* Perfect for use with [Tree Style Tab](https://addons.mozilla.org/en-US/firefox/addon/tree-style-tab/)!
+* Perfect for use with [Tree Style Tab](https://addons.mozilla.org/firefox/addon/tree-style-tab/)!
 * Each note is a separate tab/window.
 * Each note can have a title and body text.
 * Each note is stored in the tab's location bar when saved.
@@ -56,7 +56,7 @@ device (i.e. not sent anywhere) and no tracking or analytics scripts are used.
 
 If you are not using private browsing, then your notes will be stored in your
 browser history
-(a) as you type, using [the HTML5 History API](https://developer.mozilla.org/en-US/docs/Web/API/History_API),
+(a) as you type, using [the HTML5 History API](https://developer.mozilla.org/docs/Web/API/History_API),
 and (b) in the URL's hash (the part after the `#` symbol) when you save a
 note.  This obviously places your notes at the mercy of your browser's
 privacy practices.  Firefox will also store the individual form fields
