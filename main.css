@@ -46,6 +46,13 @@ a:hover {
 
 /* App */
 
+body {
+ margin: 0.625em 0.75em 0.75em 0.75em;
+}
+
+#title {
+ height: 1.125em;
+}
 #title, #body {
  display: block;
  border: none;
@@ -76,8 +83,8 @@ a:hover {
 }
 #body {
  margin-top: 1em;
- width: 100%;
- max-height: calc(100vh - 5em);
+ width: calc(100% - 0.25em);
+ max-height: calc(100vh - 5.25em);
  line-height: 1.25;
  resize: none;
 }
