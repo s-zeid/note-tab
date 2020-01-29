@@ -138,6 +138,8 @@ class App {
    } else {
     window.history.replaceState(null, "");
     this.load();
+    this.els.title.dispatchEvent(new CustomEvent("x-autoresize-update"));
+    this.els.body.dispatchEvent(new CustomEvent("x-autoresize-update"));
    }
   });
   
