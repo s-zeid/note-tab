@@ -52,6 +52,7 @@ body {
 
 #title {
  height: 1.125em;
+ max-width: calc(100% - 5.75em);
 }
 #title, #body {
  display: block;
@@ -65,7 +66,6 @@ body {
 }
 #title, #toolbar a {
  font-size: 2em;
- width: auto;
 }
 #toolbar {
  position: absolute; top: 0.625em; right: 0.5em;
@@ -73,6 +73,7 @@ body {
  color: var(--color-active);
 }
 #toolbar a {
+ width: auto;
  margin-left: 0.5em;
  text-decoration: none;
  font-family: monospace;

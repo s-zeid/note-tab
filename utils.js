@@ -26,6 +26,26 @@ export class StructuredCloneHash {
 }
 
 
+export function autoResizeInput(el) {
+ function listener() {
+  let isEmpty = !el.value.length;
+  if (isEmpty && el.placeholder)
+   el.value = el.placeholder;
+  
+  el.style.width = "0px";
+  
+  let width = el.scrollWidth + window.devicePixelRatio;
+  el.style.width = `${width}px`;
+  
+  if (isEmpty)
+   el.value = "";
+ }
+ 
+ el.addEventListener("input", listener);
+ listener();
+}
+
+
 export function autoResizeTextarea(el, maxHeightPixels) {
  let maxHeight = maxHeightPixels;
  if (!maxHeight) {

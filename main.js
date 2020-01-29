@@ -160,6 +160,7 @@ class App {
   
   document.querySelector("app-container").style.display = "block";
   
+  Utils.autoResizeInput(this.els.title);
   Utils.autoResizeTextarea(this.els.body);
   
   if (!this.els.title.value && !this.els.body.value) {
