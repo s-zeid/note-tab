@@ -75,6 +75,7 @@ body {
 #toolbar a {
  margin-left: 0.5em;
  text-decoration: none;
+ font-family: monospace;
  /* `a { color: -webkit-link; }` causes visited links to be colored differently */
  color: inherit;
 }
