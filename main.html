@@ -24,8 +24,18 @@
   <app-container style="display: none;">
    <main>
     <div id="toolbar">
-     <a id="link" href="#" title="Save to location bar ({0}+Enter) ({1} for permalink)">#</a>
-     <a id="new" href="#type={0}" title="New {0}" target="_blank">+</a>
+     <a id="link" href="#" title="Save to location bar ({0}+Enter) ({1} for permalink)">
+      <svg viewBox="0 0 32 32">
+       <path fill="none" stroke="currentcolor" stroke-width="3"
+             d="M12.5-.25l-3 32.5M3 21h26M3 11h26M22.5-.25l-3 32.5" />
+      </svg>
+     </a>
+     <a id="new" href="#type={0}" title="New {0}" target="_blank">
+      <svg viewBox="0 0 32 32">
+       <path fill="none" stroke="currentcolor" stroke-width="3"
+             d="M16 3v26M3 16h26" />
+      </svg>
+     </a>
     </div>
     <input id="saved" type="hidden" value="true" />
     <input id="type" type="hidden" data-default="note" />

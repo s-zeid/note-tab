@@ -51,8 +51,8 @@ body {
 }
 
 #title {
+ max-width: calc(100% - 4.6875em);
  height: 1.125em;
- max-width: calc(100% - 5.75em);
 }
 #title:not(:focus) {
  text-overflow: ellipsis;
@@ -71,20 +71,22 @@ body {
  font-size: 2em;
 }
 #toolbar {
- position: absolute; top: 0.625em; right: 0.5em;
+ position: absolute; top: 0.5em; right: 0.25em;
  margin: 0 0.5em;
  color: var(--color-active);
 }
 #toolbar a {
- width: auto;
- margin-left: 0.5em;
- text-decoration: none;
- font-family: monospace;
+ display: inline-block;
+ width: 0.6875em; height: 0.6875em; line-height: 0.6875;
+ padding: 0.25em; margin-top: 0.125em; margin-left: 0.125em;
  /* `a { color: -webkit-link; }` causes visited links to be colored differently */
  color: inherit;
+ outline: 2px solid transparent;
+ transition: outline-color 0.125s linear;
+ -webkit-tap-highlight-color: transparent;
 }
-#link {
- transform: rotate(45deg);
+#toolbar a:focus {
+ outline-color: inherit;
 }
 #body {
  margin-top: 1em;
@@ -92,4 +94,10 @@ body {
  max-height: calc(100vh - 5.25em);
  line-height: 1.25;
  resize: none;
+}
+
+@media screen and (max-width: 384px) {
+ #title, #toolbar a {
+  font-size: 1.5em;
+ }
 }
