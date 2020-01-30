@@ -9,6 +9,7 @@ class App {
  constructor() {
   this.els = {
    link: document.querySelector("#link"),
+   download: document.querySelector("#download"),
    new_: document.querySelector("#new"),
    saved: document.querySelector("#saved"),
    type: document.querySelector("#type"),
@@ -47,6 +48,8 @@ class App {
   Utils.formatFromAttribute(this.els.new_, "title", f => f.replace("{0}", type));
   Utils.formatFromAttribute(this.els.title, "placeholder", f => f.replace("{0}", type));
   
+  this.els.download.addEventListener("click", () => this.download());
+  
   let title = params.get("title") || this.els.title.value;
   this.els.title.value = title;
   this.setDocumentTitle();
@@ -71,6 +74,27 @@ class App {
   this.state.saved = true;
   this.setDocumentTitle();
   this.replaceState(null, true);
+ }
+ 
+ download() {
+  const NL = !navigator.userAgent.includes("Windows") ? "\n" : "\r\n";
+  
+  let title = this.els.title.value || this.els.title.placeholder;
+  let separator = "=".repeat(Math.min(title.length, 76));
+  let contents = `${title}${NL}${separator}${NL+NL}${this.els.body.value}${NL}`;
+  
+  let url = URL.createObjectURL(new Blob(
+   [contents], {type: "text/plain; charset=utf-8"}
+  ));
+  
+  let a = document.createElement("a");
+  a.href = url;
+  a.download = `${title}.${this.els.type.value}.txt`.replace("/", "\u2044");
+  a.style.display = "none";
+  this.els.download.parentElement.insertBefore(a, this.els.download);
+  a.click();
+  a.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 2000);
  }
  
  setDocumentTitle() {

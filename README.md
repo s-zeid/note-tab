@@ -30,6 +30,7 @@ Features
 * You can customize the "New note" text by changing the `type=` parameter
   in the URL.
 * You can copy a permalink to a note whether or not it has been saved.
+* You can save a note as a text file.
 
 
 Usage
