@@ -54,6 +54,9 @@ body {
  height: 1.125em;
  max-width: calc(100% - 5.75em);
 }
+#title:not(:focus) {
+ text-overflow: ellipsis;
+}
 #title, #body {
  display: block;
  border: none;
