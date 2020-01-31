@@ -48,8 +48,6 @@ class App {
   Utils.formatFromAttribute(this.els.new_, "title", f => f.replace("{0}", type));
   Utils.formatFromAttribute(this.els.title, "placeholder", f => f.replace("{0}", type));
   
-  this.els.download.addEventListener("click", () => this.download());
-  
   let title = params.get("title") || this.els.title.value;
   this.els.title.value = title;
   this.setDocumentTitle();
@@ -179,6 +177,8 @@ class App {
     e.preventDefault();
    this.save();
   });
+  
+  this.els.download.addEventListener("click", () => this.download());
   
   this.els.title.addEventListener("input", e => this.updateOnInput(e));
   this.els.body.addEventListener("input", e => this.updateOnInput(e));
