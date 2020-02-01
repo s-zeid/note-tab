@@ -139,11 +139,6 @@ class App {
  }
  
  main() {
-  if (!window.InputEvent)
-   return;
-  
-  document.querySelector("#loading-error").style.display = "none";
-  
   if (navigator.userAgent.match(/Gecko[\/]/))
    document.documentElement.classList.add("gecko");
   if (navigator.userAgent.match(/WebKit/))
