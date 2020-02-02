@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1" />
   <style id="compat-css">:root.compatible #compat-error { display: none; }</style>
   <script id="compat-check" type="module">
-   if (location.protocol !== "file:" && typeof(import.meta) === "object" &&
+   if (!document.baseURI.startsWith("file:") && typeof(import.meta) === "object" &&
        window.InputEvent)
     document.documentElement.classList.add("compatible");
   </script>

@@ -46,6 +46,13 @@ the note's title is focused, you can simply press Enter.)
 You can also clone the Git repository and run the app locally.  However, that
 requires you to use a local Web server instead of the file: URL scheme.
 
+An unsigned [Web Bundle][web-bundle] is available at
+<https://note-tab.bnay.me/note-tab.wbn>.  Currently (as of 2020-02-01),
+this requires Chromium/Chrome 79 or later.  In Chromium/Chrome 79,
+<chrome://flags/#web-bundles> must be enabled.
+
+[web-bundle]: https://web.dev/web-bundles/
+
 
 License and Privacy
 -------------------

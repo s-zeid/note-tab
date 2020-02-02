@@ -123,7 +123,10 @@ class App {
    hash: Utils.StructuredCloneHash.encode(stateHash, this.MAGIC),
    saved: this.state.saved,
   };
-  window.history.replaceState(state, document.title, save ? stateHash : undefined);
+  let url = undefined;
+  if (save)
+   url = location.href.replace(/#.*$/, "") + stateHash;
+  window.history.replaceState(state, document.title, url);
  }
  
  updateOnInput(e) {
