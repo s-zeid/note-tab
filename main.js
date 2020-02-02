@@ -29,6 +29,7 @@ class App {
    },
   };
   
+  this.baseURI = null;
   this.initialTitle = null;
  }
  
@@ -44,7 +45,11 @@ class App {
   
   let type = params.get("type") || this.els.type.value || this.els.type.dataset["default"];
   this.els.type.value = type;
-  Utils.formatFromAttribute(this.els.new_, "href", f => f.replace("{0}", type));
+  Utils.formatFromAttribute(this.els.new_, "href", f => {
+   f = f.replace("{0}", this.baseURI);
+   f = f.replace("{1}", type);
+   return f;
+  });
   Utils.formatFromAttribute(this.els.new_, "title", f => f.replace("{0}", type));
   Utils.formatFromAttribute(this.els.title, "placeholder", f => f.replace("{0}", type));
   
@@ -125,7 +130,7 @@ class App {
   };
   let url = undefined;
   if (save)
-   url = location.href.replace(/#.*$/, "") + stateHash;
+   url = this.baseURI + stateHash;
   window.history.replaceState(state, document.title, url);
  }
  
@@ -147,9 +152,10 @@ class App {
   if (navigator.userAgent.match(/WebKit/))
    document.documentElement.classList.add("webkit");
   
+  this.baseURI = window.location.href.replace(/#.*$/, "");
   this.initialTitle = document.title;
+  
   this.load();
-  this.els.link.href = this.makeHash();
   
   window.addEventListener("hashchange", e => {
    this.state.saved = true;
@@ -162,6 +168,8 @@ class App {
     this.els.body.dispatchEvent(new CustomEvent("x-autoresize-update"));
    }
   });
+  
+  this.els.link.href = this.makeHash();
   
   Utils.formatFromAttribute(this.els.link, "title", f => {
    let ua = navigator.userAgent;
