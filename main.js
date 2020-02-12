@@ -63,6 +63,9 @@ class App {
   
   this.update(false);
   
+  if (!window.history.state)
+   this.save(false);
+  
   this.state.loaded = true;
  }
  
@@ -89,10 +92,13 @@ class App {
    document.title = title;
  }
  
- save() {
+ save(saveHash) {
+  if (typeof saveHash === "undefined")
+   saveHash = true;
+  
   this.state.saved = true;
   this.setDocumentTitle();
-  this.replaceState(null, true);
+  this.replaceState(null, saveHash);
  }
  
  download() {
@@ -137,14 +143,14 @@ class App {
   return "#" + params.join("&");
  }
  
- replaceState(hash, save) {
+ replaceState(hash, saveHash) {
   let stateHash = hash || this.makeHash();
   let state = {
    hash: Utils.StructuredCloneHash.encode(stateHash, this.MAGIC),
    saved: this.state.saved,
   };
   let url = undefined;
-  if (save)
+  if (saveHash)
    url = this.baseURI + stateHash;
   window.history.replaceState(state, document.title, url);
  }
@@ -173,7 +179,6 @@ class App {
   this.load();
   
   window.addEventListener("hashchange", e => {
-   this.state.saved = true;
    window.history.replaceState(null, "");
    this.load();
   });
