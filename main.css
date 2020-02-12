@@ -52,9 +52,9 @@ body {
 
 #title {
  /* 100%
-  *  - (#toolbar a){width + padding-(left + right) + margin-left} * <n-buttons>
-  *  - #toolbar{right} - body{margin-right} / #toolbar{font-size} * 1.5 */
- max-width: calc(100% - (0.6875em + 0.25em * 2 + 0.125em) * 4 - 0.25em - 0.75em / 2 * 1.5);
+  *  - (#toolbar a){width + margin-left} * <n-buttons> + (#toolbar a){margin-left} / 2
+  *  - body{margin-right} / #toolbar{font-size} */
+ max-width: calc(100% - (1.1875em + 0.25em) * 4 + 0.25em / 2 - 0.75em / 2);
  height: 1.125em;
 }
 #title:not(:focus) {
@@ -74,14 +74,15 @@ body {
  font-size: 2em;
 }
 #toolbar {
+ display: flex;
  position: absolute; top: 0.5em; right: 0.25em;
  margin: 0 0.5em;
  color: var(--color-active);
 }
 #toolbar a {
- display: inline-block;
- width: 0.6875em; height: 0.6875em; line-height: 0.6875;
- padding: 0.25em; margin-top: 0.125em; margin-left: 0.125em;
+ display: inline-flex; align-items: center; justify-content: center;
+ width: 1.1875em; height: 1.1875em;
+ margin-top: 0.125em; margin-left: 0.25em;
  /* `a { color: -webkit-link; }` causes visited links to be colored differently */
  color: inherit;
  outline: 2px solid transparent;
@@ -90,6 +91,9 @@ body {
 }
 #toolbar a:focus {
  outline-color: inherit;
+}
+#toolbar a > svg {
+ width: calc(1px * var(--size)); height: calc(1px * var(--size));
 }
 #body {
  margin-top: 1em;
