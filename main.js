@@ -19,7 +19,6 @@ class App {
   
   this.state = {
    _els: this.els,
-   changingHash: false,
    loaded: false,
    get saved() {
     return this._els.saved.value != "";
@@ -73,7 +72,6 @@ class App {
  }
  
  save() {
-  this.state.changingHash = !this.state.saved;
   this.state.saved = true;
   this.setDocumentTitle();
   this.replaceState(null, true);
@@ -159,14 +157,10 @@ class App {
   
   window.addEventListener("hashchange", e => {
    this.state.saved = true;
-   if (this.state.changingHash) {
-    this.state.changingHash = false;
-   } else {
-    window.history.replaceState(null, "");
-    this.load();
-    this.els.title.dispatchEvent(new CustomEvent("x-autoresize-update"));
-    this.els.body.dispatchEvent(new CustomEvent("x-autoresize-update"));
-   }
+   window.history.replaceState(null, "");
+   this.load();
+   this.els.title.dispatchEvent(new CustomEvent("x-autoresize-update"));
+   this.els.body.dispatchEvent(new CustomEvent("x-autoresize-update"));
   });
   
   this.els.link.href = this.makeHash();
