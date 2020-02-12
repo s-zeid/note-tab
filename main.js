@@ -12,21 +12,14 @@ class App {
    link: container.querySelector("#link"),
    download: container.querySelector("#download"),
    new_: container.querySelector("#new"),
-   saved: container.querySelector("#saved"),
    type: container.querySelector("#type"),
    title: container.querySelector("#title"),
    body: container.querySelector("#body"),
   };
   
   this.state = {
-   _els: this.els,
    loaded: false,
-   get saved() {
-    return this._els.saved.value != "";
-   },
-   set saved(value) {
-    this._els.saved.value = value ? "true" : "";
-   },
+   saved: false,
   };
   
   this.baseURI = null;
@@ -36,14 +29,14 @@ class App {
  load() {
   let historyState = window.history.state || {
    hash: window.location.hash,
-   saved: this.state.saved,
+   saved: true,
   };
   this.state.saved = historyState.saved;
   
   let hash = Utils.StructuredCloneHash.decode(historyState.hash || "#");
   let params = new URLSearchParams(hash.substring(1));
   
-  let type = params.get("type") || this.els.type.value || this.els.type.dataset["default"];
+  let type = params.get("type") || this.els.type.dataset["default"];
   this.els.type.value = type;
   Utils.formatFromAttribute(this.els.new_, "href", f => {
    f = f.replace("{0}", this.baseURI);
@@ -53,12 +46,10 @@ class App {
   Utils.formatFromAttribute(this.els.new_, "title", f => f.replace("{0}", type));
   Utils.formatFromAttribute(this.els.title, "placeholder", f => f.replace("{0}", type));
   
-  let title = params.get("title") || this.els.title.value;
-  this.els.title.value = title;
+  this.els.title.value = params.get("title") || "";
   this.els.title.dispatchEvent(new CustomEvent("x-autoresize-update"));
   
-  let body = params.get("body") || this.els.body.value;
-  this.els.body.value = body;
+  this.els.body.value = params.get("body") || "";
   this.els.body.dispatchEvent(new CustomEvent("x-autoresize-update"));
   
   this.update(false);

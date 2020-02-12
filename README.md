@@ -68,7 +68,7 @@ browser history
 and (b) in the URL's hash (the part after the `#` symbol) when you save a
 note.  This obviously places your notes at the mercy of your browser's
 privacy practices.  Firefox will also store the individual form fields
-for each tab.
+for each tab (but Note Tab does not rely on that behavior).
 
 **DISCLAIMER**:
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
