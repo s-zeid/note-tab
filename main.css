@@ -54,7 +54,7 @@ body {
  /* 100%
   *  - (#toolbar a){width + padding-(left + right) + margin-left} * <n-buttons>
   *  - #toolbar{right} - body{margin-right} / #toolbar{font-size} * 1.5 */
- max-width: calc(100% - (0.6875em + 0.25em * 2 + 0.125em) * 3 - 0.25em - 0.75em / 2 * 1.5);
+ max-width: calc(100% - (0.6875em + 0.25em * 2 + 0.125em) * 4 - 0.25em - 0.75em / 2 * 1.5);
  height: 1.125em;
 }
 #title:not(:focus) {
@@ -98,8 +98,11 @@ body {
  line-height: 1.25;
  resize: none;
 }
+#file {
+ display: none;
+}
 
-@media screen and (max-width: 384px) {
+@media screen and (max-width: 480px) {
  #title, #toolbar a {
   font-size: 1.5em;
  }

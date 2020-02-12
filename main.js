@@ -9,12 +9,14 @@ class App {
  constructor(container) {
   this.els = {
    container: container,
-   link: container.querySelector("#link"),
-   download: container.querySelector("#download"),
-   new_: container.querySelector("#new"),
    type: container.querySelector("#type"),
    title: container.querySelector("#title"),
    body: container.querySelector("#body"),
+   link: container.querySelector("#link"),
+   download: container.querySelector("#download"),
+   open: container.querySelector("#open"),
+   new_: container.querySelector("#new"),
+   file: container.querySelector("#file"),
   };
   
   this.state = {
@@ -90,6 +92,45 @@ class App {
   this.state.saved = true;
   this.setDocumentTitle();
   this.replaceState(null, saveHash);
+ }
+ 
+ async open() {
+  if (this.els.file.files.length) {
+   let file = this.els.file.files[0];
+   let contents = await file.text();
+   this.state.saved = false;
+   
+   // Use the type from the filename (of the format `<title>.<type>.txt`)
+   // if the filename matches the rules listed in <README.md#file-format>.
+   const typeRegExp = /[^.]\.([a-zA-Z ]|[^\u0000-\u007f])+( \([0-9]+\)|-[0-9]+)?\.txt$/i;
+   let type = this.els.type.dataset["default"];
+   if (file.name.match(typeRegExp)) {
+    let typeParts = file.name.split(".");
+    let typeCandidate = typeParts[typeParts.length - 2];
+    if (!typeCandidate.startsWith(" "))
+     type = typeCandidate.replace(/( \([0-9]+\)|-[0-9]+)$/, "");
+   }
+   
+   const titleRegExp = /^[^\n]*\r?\n=+\r?\n(\r?\n)?/m;
+   let title = "";
+   let body = "";
+   if (contents.search(titleRegExp) === 0) {
+    title = contents.split(/\r?\n/m, 1);
+    body = contents.replace(titleRegExp, "");
+   } else {
+    body = contents;
+   }
+   if (body.substring(body.length - 2) === "\r\n")
+    body = body.substring(0, body.length - 2);
+   else if (body.substring(body.length - 1) === "\n")
+    body = body.substring(0, body.length - 1);
+   
+   this.els.type.value = type;
+   this.els.title.value = title;
+   this.els.body.value = body;
+   this.save();
+   this.load();
+  }
  }
  
  download() {
@@ -181,6 +222,10 @@ class App {
    return f;
   });
   
+  this.els.title.addEventListener("input", e => this.updateOnInput(e));
+  this.els.body.addEventListener("input", e => this.updateOnInput(e));
+  document.documentElement.addEventListener("keyup", e => this.saveOnKeyUp(e));
+  
   this.els.link.addEventListener("click", e => {
    if (!(e.altKey || e.ctrlKey || e.metaKey || e.shiftKey))
     e.preventDefault();
@@ -189,9 +234,9 @@ class App {
   
   this.els.download.addEventListener("click", () => this.download());
   
-  this.els.title.addEventListener("input", e => this.updateOnInput(e));
-  this.els.body.addEventListener("input", e => this.updateOnInput(e));
-  document.documentElement.addEventListener("keyup", e => this.saveOnKeyUp(e));
+  this.els.file.value = "";
+  this.els.file.addEventListener("change", () => this.open());
+  this.els.open.addEventListener("click", () => this.els.file.click());
   
   this.els.container.style.display = "block";
   

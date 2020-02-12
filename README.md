@@ -12,6 +12,7 @@ Contents
 
 * [Features](#features)
 * [Usage](#usage)
+* [File Format](#file-format)
 * [License and Privacy](#license-and-privacy)
 
 
@@ -30,7 +31,7 @@ Features
 * You can customize the "New note" text by changing the `type=` parameter
   in the URL.
 * You can copy a permalink to a note whether or not it has been saved.
-* You can save a note as a text file.
+* Notes can be saved to and loaded from text files.
 
 
 Usage
@@ -52,6 +53,54 @@ this requires Chromium/Chrome 79 or later.  In Chromium/Chrome 79,
 <chrome://flags/#web-bundles> must be enabled.
 
 [web-bundle]: https://web.dev/web-bundles/
+
+
+File Format
+-----------
+
+A simple plain text format is used for saving and loading notes.
+The file extension used is `.txt`.
+
+The title, if not empty, is saved to the beginning of the file using
+Markdown Setext-style heading syntax, e.g.:
+
+```
+Title
+=====
+
+Body
+...
+```
+
+The note type (`type=...` in the hash) is saved to the end of the filename,
+before the file extension, e.g. `Title.type.txt`.
+
+When loading a file, the title is always loaded from the file's contents.
+If the file does not contain a title in the format shown above, then the
+title used will be the empty string.  The type is loaded from the filename
+using the format shown above if the following rules are all true.  If
+they are not true, then the default type ("note") is used.
+
+* The filename ends in ".txt",
+* `type` only contains letters, spaces, and/or code points above U+007F
+  (e.g. accented letters or non-Latin scripts), and optionally
+  a " (`digit(s)`)" or "-`digit(s)`" suffix (sometimes added by browsers
+  or file managers when a file with the same name already exists),
+  and
+* `type` does not start with a space.
+
+An " (`digit(s)`)" or "-`digit(s)`" suffix is stripped from the type.
+
+A leading dot in the filename is not considered to be the separator
+between the title and `type`.  (These are hidden files in most operating
+systems other than Windows.)
+
+These rules are meant for cases where a file not made by this app
+(or one that has been renamed) is opened and contains numbers or
+periods in its filename (e.g. the name contains multiple sentences
+or contains prefixes such as "Ms. "), without requiring an extra
+identifying suffix such as ".tab" to be added to the filename or
+clutter to be added to the file's contents.
 
 
 License and Privacy
