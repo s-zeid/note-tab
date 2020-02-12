@@ -6,15 +6,16 @@ class App {
   return "46e56985-cff3-45fd-b1b7-c5f84fbb921c";
  }
  
- constructor() {
+ constructor(container) {
   this.els = {
-   link: document.querySelector("#link"),
-   download: document.querySelector("#download"),
-   new_: document.querySelector("#new"),
-   saved: document.querySelector("#saved"),
-   type: document.querySelector("#type"),
-   title: document.querySelector("#title"),
-   body: document.querySelector("#body"),
+   container: container,
+   link: container.querySelector("#link"),
+   download: container.querySelector("#download"),
+   new_: container.querySelector("#new"),
+   saved: container.querySelector("#saved"),
+   type: container.querySelector("#type"),
+   title: container.querySelector("#title"),
+   body: container.querySelector("#body"),
   };
   
   this.state = {
@@ -184,7 +185,7 @@ class App {
   this.els.body.addEventListener("input", e => this.updateOnInput(e));
   document.documentElement.addEventListener("keyup", e => this.saveOnKeyUp(e));
   
-  document.querySelector("app-container").style.display = "block";
+  this.els.container.style.display = "block";
   
   Utils.autoResizeInput(this.els.title);
   Utils.autoResizeTextarea(this.els.body);
@@ -198,5 +199,5 @@ class App {
 
 
 window.Utils = Utils;
-window.app = new App();
+window.app = new App(document.querySelector("app-container"));
 window.addEventListener("DOMContentLoaded", () => app.main());
