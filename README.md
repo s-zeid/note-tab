@@ -102,6 +102,13 @@ or contains prefixes such as "Ms. "), without requiring an extra
 identifying suffix such as ".tab" to be added to the filename or
 clutter to be added to the file's contents.
 
+[The HTML Living Standard][html-textarea-api-value] states that newlines
+are to be normalized to Unix line endings (i.e. `\n` instead of `\r\n`).
+Firefox and Chrome both do this on Windows (IE and pre-Chromium Edge are
+not supported).  Therefore, the files will use Unix line endings.
+
+[html-textarea-api-value]: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#textFieldSelection
+
 
 License and Privacy
 -------------------

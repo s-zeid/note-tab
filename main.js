@@ -134,18 +134,16 @@ class App {
  }
  
  download() {
-  const NL = !navigator.userAgent.includes("Windows") ? "\n" : "\r\n";
-  
   let title = "";
   let titleContents = "";
   if (this.els.title.value) {
    title = this.els.title.value;
    let separator = "=".repeat(Math.min(title.length, 76));
-   titleContents = `${title}${NL}${separator}${NL+NL}`;
+   titleContents = `${title}\n${separator}\n\n`;
   } else {
    title = this.els.title.placeholder;
   }
-  let contents = `${titleContents}${this.els.body.value}${NL}`;
+  let contents = `${titleContents}${this.els.body.value}\n`;
   
   let url = URL.createObjectURL(new Blob(
    [contents], {type: "text/plain; charset=utf-8"}
