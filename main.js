@@ -56,22 +56,37 @@ class App {
   let title = params.get("title") || this.els.title.value;
   this.els.title.value = title;
   this.els.title.dispatchEvent(new CustomEvent("x-autoresize-update"));
-  this.setDocumentTitle();
   
   let body = params.get("body") || this.els.body.value;
   this.els.body.value = body;
   this.els.body.dispatchEvent(new CustomEvent("x-autoresize-update"));
   
+  this.update(false);
+  
   this.state.loaded = true;
  }
  
- update() {
-  this.state.saved = false;
+ update(doState) {
+  if (typeof doState === "undefined")
+   doState = true;
+  
+  if (doState)
+   this.state.saved = false;
   
   let hash = this.makeHash();
   this.els.link.href = hash;
   this.setDocumentTitle();
-  this.replaceState(hash);
+  
+  if (doState)
+   this.replaceState(hash);
+ }
+ 
+ setDocumentTitle() {
+  let title = this.els.title.value || this.els.title.placeholder;
+  if (this.state.saved === false)
+   title = "* " + title;
+  if (document.title != title)
+   document.title = title;
  }
  
  save() {
@@ -106,14 +121,6 @@ class App {
   a.click();
   a.remove();
   window.setTimeout(() => URL.revokeObjectURL(url), 2000);
- }
- 
- setDocumentTitle() {
-  let title = this.els.title.value || this.els.title.placeholder;
-  if (this.state.saved === false)
-   title = "* " + title;
-  if (document.title != title)
-   document.title = title;
  }
  
  makeHash() {
@@ -170,8 +177,6 @@ class App {
    window.history.replaceState(null, "");
    this.load();
   });
-  
-  this.els.link.href = this.makeHash();
   
   Utils.formatFromAttribute(this.els.link, "title", f => {
    let ua = navigator.userAgent;
