@@ -55,10 +55,12 @@ class App {
   
   let title = params.get("title") || this.els.title.value;
   this.els.title.value = title;
+  this.els.title.dispatchEvent(new CustomEvent("x-autoresize-update"));
   this.setDocumentTitle();
   
   let body = params.get("body") || this.els.body.value;
   this.els.body.value = body;
+  this.els.body.dispatchEvent(new CustomEvent("x-autoresize-update"));
   
   this.state.loaded = true;
  }
@@ -167,8 +169,6 @@ class App {
    this.state.saved = true;
    window.history.replaceState(null, "");
    this.load();
-   this.els.title.dispatchEvent(new CustomEvent("x-autoresize-update"));
-   this.els.body.dispatchEvent(new CustomEvent("x-autoresize-update"));
   });
   
   this.els.link.href = this.makeHash();
