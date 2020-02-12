@@ -29,6 +29,10 @@
   </div>
   <app-container style="display: none;">
    <main>
+    <input id="saved" type="hidden" value="true" />
+    <input id="type" type="hidden" data-default="note" />
+    <input id="title" type="text" placeholder="New {0}" />
+    <textarea id="body" placeholder="Details..."></textarea>
     <div id="toolbar">
      <a id="link" href="#" title="Save to location bar ({0}+Enter) ({1} for permalink)">
       <svg viewBox="0 0 32 32">
@@ -49,10 +53,6 @@
       </svg>
      </a>
     </div>
-    <input id="saved" type="hidden" value="true" />
-    <input id="type" type="hidden" data-default="note" />
-    <input id="title" type="text" placeholder="New {0}" />
-    <textarea id="body" placeholder="Details..."></textarea>
    </main>
   </app-container>
  </body>
