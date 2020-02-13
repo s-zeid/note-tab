@@ -72,7 +72,7 @@ main {
  border-bottom-color: var(--color-active);
  outline: none;
 }
-#title, #toolbar a {
+#title, #toolbar > * {
  font-size: 2em;
 }
 #toolbar {
@@ -80,7 +80,7 @@ main {
  display: flex;
  color: var(--color-active);
 }
-#toolbar a {
+#toolbar > * {
  display: inline-flex; align-items: center; justify-content: center;
  width: 1.1875em; height: 1.1875em;
  margin-left: 0.25em;
@@ -88,12 +88,16 @@ main {
  color: inherit;
  outline: 0.125rem solid transparent;
  transition: outline-color 0.125s linear;
+ background: none; border: none; cursor: pointer; padding: 0;
  -webkit-tap-highlight-color: transparent;
 }
-#toolbar a:focus {
+#toolbar > *:focus {
  outline-color: inherit;
 }
-#toolbar a > svg {
+#toolbar > button::-moz-focus-inner {
+ border: none; padding: 0;
+}
+#toolbar > * > svg {
  width: calc(var(--size) * 1px); height: calc(var(--size) * 1px);
 }
 #body {
@@ -110,7 +114,7 @@ main {
 }
 
 @media screen and (max-width: 480px) {
- #title, #toolbar a {
+ #title, #toolbar > * {
   font-size: 1.5em;
  }
 }
