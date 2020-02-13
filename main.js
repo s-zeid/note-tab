@@ -236,7 +236,9 @@ class App {
   this.els.file.addEventListener("change", () => this.open());
   this.els.open.addEventListener("click", () => this.els.file.click());
   
-  this.els.container.style.display = "block";
+  this.els.container.style.display = null;
+  if (!this.els.container.style.cssText)
+   this.els.container.removeAttribute("style");
   
   Utils.autoResizeInput(this.els.title);
   Utils.autoResizeTextarea(this.els.body);
@@ -250,5 +252,5 @@ class App {
 
 
 window.Utils = Utils;
-window.app = new App(document.querySelector("app-container"));
+window.app = new App(document.querySelector("main"));
 window.addEventListener("DOMContentLoaded", () => app.main());
