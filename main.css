@@ -109,9 +109,6 @@ main {
 .webkit #body {
  max-height: calc(100% - 0.125rem * 3);  /* wat - <https://i.imgur.com/IppKJ.jpg> */
 }
-#file {
- display: none;
-}
 
 @media screen and (max-width: 480px) {
  #title, #toolbar > * {
