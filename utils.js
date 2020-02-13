@@ -47,16 +47,7 @@ export function autoResizeInput(el) {
 }
 
 
-export function autoResizeTextarea(el, maxHeightPixels) {
- let maxHeight = maxHeightPixels;
- if (!maxHeight) {
-  maxHeight = window.getComputedStyle(el).maxHeight;
-  if (maxHeight.match(/^[0-9]+px$/))
-   maxHeight = Number(maxHeight.replace(/[^0-9]/g, ""));
-  else
-   maxHeight = null;
- }
- 
+export function autoResizeTextarea(el) {
  if (!el.style.minHeight) {
   el.style.setProperty("--computed-line-height", window.getComputedStyle(el).lineHeight);
   el.style.minHeight = "calc(var(--computed-line-height) * 3 + 1px)";
@@ -65,9 +56,8 @@ export function autoResizeTextarea(el, maxHeightPixels) {
  function listener() {
   el.style.height = "auto";
   
-  let height = Math.min(el.scrollHeight + window.devicePixelRatio, maxHeight || Infinity);
+  let height = el.scrollHeight + window.devicePixelRatio;
   el.style.height = `${height}px`;
-  el.style.overflowY = (height >= maxHeight) ? "auto" : "hidden";
  }
  
  el.addEventListener("input", listener);
