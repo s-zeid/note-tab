@@ -198,11 +198,6 @@ class App {
  }
  
  main() {
-  if (navigator.userAgent.match(/Gecko[\/]/))
-   document.documentElement.classList.add("gecko");
-  if (navigator.userAgent.match(/WebKit/))
-   document.documentElement.classList.add("webkit");
-  
   this.baseURI = window.location.href.replace(/#.*$/, "");
   this.initialTitle = document.title;
   

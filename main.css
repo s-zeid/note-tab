@@ -18,13 +18,17 @@
  --font-main: caption;
 }
 
-:root.gecko {
- --color-background: -moz-field;
- --color-foreground: -moz-fieldtext;
+@supports (color: Field) {
+ :root {
+  --color-background: Field;
+  --color-foreground: FieldText;
+ }
 }
 
-:root.webkit {
- --color-active: -webkit-link;
+@supports (color: -webkit-link) {
+ :root {
+  --color-active: -webkit-link;
+ }
 }
 
 body, input, textarea {
@@ -106,8 +110,10 @@ main {
  line-height: 1.25;
  resize: none;
 }
-.webkit #body {
- max-height: calc(100% - 0.125rem * 3);  /* wat - <https://i.imgur.com/IppKJ.jpg> */
+@supports (color: -webkit-link) {
+ #body {
+  max-height: calc(100% - 0.125rem * 3);  /* wat - <https://i.imgur.com/IppKJ.jpg> */
+ }
 }
 
 @media screen and (max-width: 480px) {
