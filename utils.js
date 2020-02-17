@@ -43,6 +43,7 @@ export function autoResizeInput(el) {
  
  el.addEventListener("input", listener);
  el.addEventListener("x-autoresize-update", listener);
+ window.addEventListener("resize", listener);
  listener();
 }
 
@@ -62,6 +63,7 @@ export function autoResizeTextarea(el) {
  
  el.addEventListener("input", listener);
  el.addEventListener("x-autoresize-update", listener);
+ window.addEventListener("resize", listener);
  listener();
 }
 
