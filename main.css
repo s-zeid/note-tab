@@ -31,6 +31,14 @@
  }
 }
 
+@supports (color: -moz-nativehyperlinktext) {
+ /* TODO: see if Mozilla implements LinkText as -moz-nativehyperlinktext
+  * as per <https://bugzilla.mozilla.org/show_bug.cgi?id=1590894#c5> */
+ :root {
+  --color-active: -moz-nativehyperlinktext;
+ }
+}
+
 body, input, textarea {
  background: var(--color-background);
  color: var(--color-foreground);
