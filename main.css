@@ -96,6 +96,9 @@ fieldset {
  border-bottom-color: var(--color-active);
  outline: none;
 }
+#title > input::placeholder, #body > textarea::placeholder {
+ color: var(--color-inactive); opacity: 1;
+}
 
 #body {
  grid-column: span 2;
