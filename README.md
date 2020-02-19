@@ -32,6 +32,7 @@ Features
   in the URL.
 * You can copy a permalink to a note whether or not it has been saved.
 * Notes can be saved to and loaded from text files.
+* Notes can be printed through your browser's built-in print function.
 
 
 Usage

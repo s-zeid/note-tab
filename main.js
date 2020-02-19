@@ -9,9 +9,17 @@ class App {
  constructor(container) {
   this.els = {
    container: container,
-   type: container.querySelector("#type"),
-   title: container.querySelector("#title"),
-   body: container.querySelector("#body"),
+   type: {
+    field: container.querySelector("#type"),
+   },
+   title: {
+    field: container.querySelector("#title > input"),
+    print: container.querySelector("#title > pre"),
+   },
+   body: {
+    field: container.querySelector("#body > textarea"),
+    print: container.querySelector("#body > pre"),
+   },
    link: container.querySelector("#link"),
    download: container.querySelector("#download"),
    open: container.querySelector("#open"),
@@ -25,6 +33,7 @@ class App {
   };
   
   this.baseURI = null;
+  this.debug = false;
   this.initialTitle = null;
  }
  
@@ -38,21 +47,21 @@ class App {
   let hash = Utils.StructuredCloneHash.decode(historyState.hash || "#");
   let params = new URLSearchParams(hash.substring(1));
   
-  let type = params.get("type") || this.els.type.dataset["default"];
-  this.els.type.value = type;
+  let type = params.get("type") || this.els.type.field.dataset["default"];
+  this.els.type.field.value = type;
   Utils.formatFromAttribute(this.els.new_, "href", f => {
    f = f.replace("{0}", this.baseURI);
    f = f.replace("{1}", type);
    return f;
   });
   Utils.formatFromAttribute(this.els.new_, "title", f => f.replace("{0}", type));
-  Utils.formatFromAttribute(this.els.title, "placeholder", f => f.replace("{0}", type));
+  Utils.formatFromAttribute(this.els.title.field, "placeholder", f => f.replace("{0}", type));
   
-  this.els.title.value = params.get("title") || "";
-  this.els.title.dispatchEvent(new CustomEvent("x-autoresize-update"));
+  this.els.title.field.value = params.get("title") || "";
+  this.els.title.field.dispatchEvent(new CustomEvent("x-autoresize-update"));
   
-  this.els.body.value = params.get("body") || "";
-  this.els.body.dispatchEvent(new CustomEvent("x-autoresize-update"));
+  this.els.body.field.value = params.get("body") || "";
+  this.els.body.field.dispatchEvent(new CustomEvent("x-autoresize-update"));
   
   this.update(false);
   
@@ -78,7 +87,7 @@ class App {
  }
  
  setDocumentTitle() {
-  let title = this.els.title.value || this.els.title.placeholder;
+  let title = this.els.title.field.value || this.els.title.field.placeholder;
   if (this.state.saved === false)
    title = "* " + title;
   if (document.title != title)
@@ -103,7 +112,7 @@ class App {
    // Use the type from the filename (of the format `<title>.<type>.txt`)
    // if the filename matches the rules listed in <README.md#file-format>.
    const typeRegExp = /[^.]\.([a-zA-Z ]|[^\u0000-\u007f])+( \([0-9]+\)|-[0-9]+)?\.txt$/i;
-   let type = this.els.type.dataset["default"];
+   let type = this.els.type.field.dataset["default"];
    if (file.name.match(typeRegExp)) {
     let typeParts = file.name.split(".");
     let typeCandidate = typeParts[typeParts.length - 2];
@@ -125,9 +134,9 @@ class App {
    else if (body.substring(body.length - 1) === "\n")
     body = body.substring(0, body.length - 1);
    
-   this.els.type.value = type;
-   this.els.title.value = title;
-   this.els.body.value = body;
+   this.els.type.field.value = type;
+   this.els.title.field.value = title;
+   this.els.body.field.value = body;
    this.save();
    this.load();
   }
@@ -136,14 +145,14 @@ class App {
  download() {
   let title = "";
   let titleContents = "";
-  if (this.els.title.value) {
-   title = this.els.title.value;
+  if (this.els.title.field.value) {
+   title = this.els.title.field.value;
    let separator = "=".repeat(Math.min(title.length, 76));
    titleContents = `${title}\n${separator}\n\n`;
   } else {
-   title = this.els.title.placeholder;
+   title = this.els.title.field.placeholder;
   }
-  let contents = `${titleContents}${this.els.body.value}\n`;
+  let contents = `${titleContents}${this.els.body.field.value}\n`;
   
   let url = URL.createObjectURL(new Blob(
    [contents], {type: "text/plain; charset=utf-8"}
@@ -151,7 +160,7 @@ class App {
   
   let a = document.createElement("a");
   a.href = url;
-  a.download = `${title}.${this.els.type.value}.txt`.replace("/", "\u2044");
+  a.download = `${title}.${this.els.type.field.value}.txt`.replace("/", "\u2044");
   a.style.display = "none";
   this.els.download.parentElement.insertBefore(a, this.els.download);
   a.click();
@@ -163,11 +172,11 @@ class App {
   let keys = ["type", "title", "body"];
   let params = [];
   for (let key of keys) {
-   if (this.els[key] && this.els[key].value)
+   if (this.els[key] && this.els[key].field && this.els[key].field.value)
     params.push(
      encodeURIComponent(key) +
      "=" +
-     encodeURIComponent(this.els[key].value)
+     encodeURIComponent(this.els[key].field.value)
     );
   }
   return "#" + params.join("&");
@@ -192,7 +201,7 @@ class App {
  }
  
  saveOnKeyUp(e) {
-  let isTitle = e.target === this.els.title;
+  let isTitle = e.target === this.els.title.field;
   if ((e.ctrlKey || e.metaKey || isTitle) && e.code.match(/^(Numpad)?Enter$/))
    return this.save();
  }
@@ -202,6 +211,18 @@ class App {
   this.initialTitle = document.title;
   
   this.load();
+  
+  window.addEventListener("beforeprint", e => {
+   const title = this.els.title, body = this.els.body;
+   title.print.textContent = title.field.value || title.field.placeholder;
+   body.print.textContent = body.field.value || body.field.placeholder;
+  });
+  window.addEventListener("afterprint", e => {
+   if (!this.debug) {
+    const title = this.els.title, body = this.els.body;
+    title.print.textContent = body.print.textContent = "";
+   }
+  });
   
   window.addEventListener("hashchange", e => {
    window.history.replaceState(null, "");
@@ -215,8 +236,8 @@ class App {
    return f;
   });
   
-  this.els.title.addEventListener("input", e => this.updateOnInput(e));
-  this.els.body.addEventListener("input", e => this.updateOnInput(e));
+  this.els.title.field.addEventListener("input", e => this.updateOnInput(e));
+  this.els.body.field.addEventListener("input", e => this.updateOnInput(e));
   document.documentElement.addEventListener("keyup", e => this.saveOnKeyUp(e));
   
   this.els.link.addEventListener("click", e => {
@@ -235,12 +256,12 @@ class App {
   if (!this.els.container.style.cssText)
    this.els.container.removeAttribute("style");
   
-  Utils.autoResizeInput(this.els.title);
-  Utils.autoResizeTextarea(this.els.body);
+  Utils.autoResizeInput(this.els.title.field);
+  Utils.autoResizeTextarea(this.els.body.field);
   
-  if (!this.els.title.value && !this.els.body.value) {
+  if (!this.els.title.field.value && !this.els.body.field.value) {
    this.save();
-   this.els.title.focus();
+   this.els.title.field.focus();
   }
  }
 }
