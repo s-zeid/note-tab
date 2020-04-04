@@ -55,6 +55,28 @@ a:hover {
  text-decoration: underline;
 }
 
+:root {
+ scrollbar-width: auto;
+ scrollbar-color: var(--color-inactive) transparent;
+}
+::-webkit-scrollbar {
+ width: 12px;
+}
+::-webkit-scrollbar-thumb {
+ --scrollbar-tint: rgba(255, 255, 255, 0.375);
+ background: linear-gradient(var(--scrollbar-tint), var(--scrollbar-tint)),
+             var(--color-inactive);
+ opacity: 0.4;
+}
+@media (prefers-color-scheme: dark) {
+ ::-webkit-scrollbar-thumb {
+  --scrollbar-tint: rgba(0, 0, 0, 0.375);
+ }
+}
+::-webkit-scrollbar-track {
+ background: transparent;
+}
+
 
 /* App */
 
@@ -108,6 +130,10 @@ fieldset {
  padding: 0; padding-inline-end: 2px;
  line-height: inherit;
  resize: none;
+ scrollbar-width: thin;
+}
+#body > textarea::-webkit-scrollbar {
+ width: 6px;
 }
 @supports (color: -webkit-link) {
  #body > textarea {
