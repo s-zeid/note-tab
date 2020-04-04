@@ -39,7 +39,7 @@
  }
 }
 
-body, input, textarea {
+:root, input, textarea {
  background: var(--color-background);
  color: var(--color-foreground);
  font: var(--font-main);
@@ -88,7 +88,7 @@ fieldset {
 #title > input, #body > textarea {
  display: block;
  border: none;
- border-bottom: 0.125rem solid var(--color-inactive);
+ border-bottom: 2px solid var(--color-inactive);
  transition: border-bottom 0.125s linear;
  font-size: inherit;
 }
@@ -104,14 +104,14 @@ fieldset {
  grid-column: span 2;
 }
 #body > textarea {
- width: calc(100% - 0.125rem); max-height: calc(100% - 0.125rem * 2);
- padding: 0; padding-inline-end: 0.125rem;
+ width: calc(100% - 2px); max-height: calc(100% - 2px * 2);
+ padding: 0; padding-inline-end: 2px;
  line-height: inherit;
  resize: none;
 }
 @supports (color: -webkit-link) {
  #body > textarea {
-  max-height: calc(100% - 0.125rem * 1);  /* wat - <https://i.imgur.com/IppKJ.jpg> */
+  max-height: calc(100% - 2px * 1);  /* wat - <https://i.imgur.com/IppKJ.jpg> */
  }
 }
 
@@ -127,7 +127,7 @@ fieldset {
  font-size: var(--header-font-size);
  /* `a { color: -webkit-link; }` causes visited links to be colored differently */
  color: inherit;
- outline: 0.125rem solid transparent;
+ outline: 2px solid transparent;
  transition: outline-color 0.125s linear;
  background: none; border: none; cursor: pointer; padding: 0;
  -webkit-tap-highlight-color: transparent;
