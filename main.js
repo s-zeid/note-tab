@@ -263,6 +263,10 @@ class App {
    this.save();
    this.els.title.field.focus();
   }
+  
+  if (!document.head.querySelector("link[rel='icon']")) {
+   Utils.setEmojiFaviconFromAttribute(document.documentElement, "data-emoji-favicon");
+  }
  }
 }
 

@@ -82,3 +82,74 @@ export function formatFromAttribute(el, attr, replaceFunction) {
  }
  return result;
 }
+
+
+export function renderEmoji(emoji, size, shadowColor) {
+ emoji = (typeof emoji === "string") ? emoji.trim() : "";
+ size = (typeof size === "number" && size > 0) ? size : 64;
+ shadowColor = (typeof shadowColor === "string") ? shadowColor : null;
+ 
+ const EMOJI_VARIATION_SELECTOR = "\uFE0F";
+ 
+ const emojiShadowColorSplitIndex = emoji.search(/[ #0-9a-zA-Z]/);
+ if (emojiShadowColorSplitIndex > -1) {
+  if (!shadowColor) {
+   shadowColor = emoji.substring(emojiShadowColorSplitIndex).trim();
+  }
+  emoji = emoji.substring(0, emojiShadowColorSplitIndex).trim();
+ }
+ 
+ const canvas = document.createElement("canvas");
+ canvas.width = canvas.height = size;
+ 
+ const ctx = canvas.getContext("2d");
+ ctx.font = `${size * 0.875}px sans-serif`;
+ ctx.textAlign = "center";
+ ctx.textBaseline = "bottom";
+ if (shadowColor) {
+  ctx.shadowColor = shadowColor;
+  ctx.shadowBlur = 1 * size / 16;
+ }
+ for (let i = 0; i < (shadowColor ? 2 : 1); i++) {
+  ctx.fillText(emoji + EMOJI_VARIATION_SELECTOR, size / 2, size);
+ }
+ 
+ return canvas.toDataURL("image/png");
+}
+
+
+export function setEmojiFavicon(emoji, size, shadowColor) {
+ size = (typeof size === "number" && size > 0) ? size : 64;
+ shadowColor = (typeof shadowColor === "string") ? shadowColor : null;
+ 
+ if (emoji && emoji.length) {
+  const newLink = document.createElement("link");
+  newLink.rel = "icon";
+  newLink.href = renderEmoji(emoji, size, shadowColor);
+  for (const oldLink of document.querySelectorAll("link[rel='icon']")) {
+   oldLink.remove();
+  }
+  document.head.appendChild(newLink);
+ }
+}
+
+
+export function setEmojiFaviconFromAttribute(element, attributeName, size, shadowColor) {
+ attributeName = (typeof attributeName === "string" && attributeName)
+                 ? attributeName : "data-emoji-favicon";
+ size = (typeof size === "number" && size > 0) ? size : 64;
+ shadowColor = (typeof shadowColor === "string") ? shadowColor : null;
+ 
+ setEmojiFavicon(element.getAttribute(attributeName), size, shadowColor);
+ 
+ const emojiFaviconObserver = new MutationObserver(mutations => {
+  for (const mutation of mutations) {
+   if (mutation.attributeName === attributeName) {
+    setEmojiFavicon(element.getAttribute(attributeName), size, shadowColor);
+   }
+  }
+ });
+ emojiFaviconObserver.observe(element, { attributes: true });
+ 
+ return emojiFaviconObserver;
+}

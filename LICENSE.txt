@@ -1,7 +1,7 @@
 Note Tab
 A simple ES6 webapp to write a note in a tab.
 
-Copyright (c) 2019-2020 S. Zeid.  Some rights reserved.
+Copyright (c) 2019-2021 S. Zeid.  Some rights reserved.
 https://code.s.zeid.me/note-tab
 
 
