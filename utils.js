@@ -84,20 +84,12 @@ export function formatFromAttribute(el, attr, replaceFunction) {
 }
 
 
-export function renderEmoji(emoji, size, shadowColor) {
+export function renderEmoji(emoji, shadowColor, size) {
  emoji = (typeof emoji === "string") ? emoji.trim() : "";
- size = (typeof size === "number" && size > 0) ? size : 64;
  shadowColor = (typeof shadowColor === "string") ? shadowColor : null;
+ size = (typeof size === "number" && size > 0) ? size : 64;
  
  const EMOJI_VARIATION_SELECTOR = "\uFE0F";
- 
- const emojiShadowColorSplitIndex = emoji.search(/[ #0-9a-zA-Z]/);
- if (emojiShadowColorSplitIndex > -1) {
-  if (!shadowColor) {
-   shadowColor = emoji.substring(emojiShadowColorSplitIndex).trim();
-  }
-  emoji = emoji.substring(0, emojiShadowColorSplitIndex).trim();
- }
  
  const canvas = document.createElement("canvas");
  canvas.width = canvas.height = size;
@@ -118,14 +110,14 @@ export function renderEmoji(emoji, size, shadowColor) {
 }
 
 
-export function setEmojiFavicon(emoji, size, shadowColor) {
- size = (typeof size === "number" && size > 0) ? size : 64;
+export function setEmojiFavicon(emoji, shadowColor, size) {
  shadowColor = (typeof shadowColor === "string") ? shadowColor : null;
+ size = (typeof size === "number" && size > 0) ? size : 64;
  
  if (emoji && emoji.length) {
   const newLink = document.createElement("link");
   newLink.rel = "icon";
-  newLink.href = renderEmoji(emoji, size, shadowColor);
+  newLink.href = renderEmoji(emoji, shadowColor, size);
   for (const oldLink of document.querySelectorAll("link[rel='icon']")) {
    oldLink.remove();
   }
@@ -134,22 +126,39 @@ export function setEmojiFavicon(emoji, size, shadowColor) {
 }
 
 
-export function setEmojiFaviconFromAttribute(element, attributeName, size, shadowColor) {
+export function setEmojiFaviconFromAttribute(element, attributeName, size, forceShadowColor) {
  attributeName = (typeof attributeName === "string" && attributeName)
                  ? attributeName : "data-emoji-favicon";
  size = (typeof size === "number" && size > 0) ? size : 64;
- shadowColor = (typeof shadowColor === "string") ? shadowColor : null;
+ forceShadowColor = (typeof forceShadowColor === "string") ? forceShadowColor : null;
+ 
+ function parse(emoji, forceShadowColor) {
+  emoji = (typeof emoji === "string") ? emoji.trim() : "";
+  forceShadowColor = (typeof forceShadowColor === "string") ? forceShadowColor : null;
+  
+  let shadowColor = forceShadowColor;
+  const emojiShadowColorSplitIndex = emoji.search(/[ #0-9a-zA-Z]/);
+  if (emojiShadowColorSplitIndex > -1) {
+   if (!shadowColor) {
+    shadowColor = emoji.substring(emojiShadowColorSplitIndex).trim();
+   }
+   emoji = emoji.substring(0, emojiShadowColorSplitIndex).trim();
+  }
+  return [emoji, shadowColor];
+ }
  
  if (!element.hasAttribute(attributeName)) {
   element.setAttribute(attributeName, "");
  }
  
- setEmojiFavicon(element.getAttribute(attributeName), size, shadowColor);
+ const parsed = parse(element.getAttribute(attributeName), forceShadowColor);
+ setEmojiFavicon.apply(null, parsed.concat([size]));
  
  const emojiFaviconObserver = new MutationObserver(mutations => {
   for (const mutation of mutations) {
    if (mutation.attributeName === attributeName) {
-    setEmojiFavicon(element.getAttribute(attributeName), size, shadowColor);
+    const parsed = parse(element.getAttribute(attributeName), forceShadowColor);
+    setEmojiFavicon.apply(null, parsed.concat([size]));
    }
   }
  });
