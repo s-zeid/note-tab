@@ -86,7 +86,7 @@ export function formatFromAttribute(el, attr, replaceFunction) {
 
 export function renderEmoji(emoji, shadowColor, size) {
  emoji = (typeof emoji === "string") ? emoji.trim() : "";
- shadowColor = (typeof shadowColor === "string") ? shadowColor : null;
+ shadowColor = (typeof shadowColor === "string") ? shadowColor.trim() : null;
  size = (typeof size === "number" && size > 0) ? size : 64;
  
  const EMOJI_VARIATION_SELECTOR = "\uFE0F";
@@ -134,7 +134,7 @@ export function setEmojiFaviconFromAttribute(element, attributeName, size, force
  
  function parse(emoji, forceShadowColor) {
   emoji = (typeof emoji === "string") ? emoji.trim() : "";
-  forceShadowColor = (typeof forceShadowColor === "string") ? forceShadowColor : null;
+  forceShadowColor = (typeof forceShadowColor === "string") ? forceShadowColor.trim() : null;
   
   let shadowColor = forceShadowColor;
   const emojiShadowColorSplitIndex = emoji.search(/[ #0-9a-zA-Z]/);
