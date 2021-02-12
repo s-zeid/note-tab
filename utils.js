@@ -140,6 +140,10 @@ export function setEmojiFaviconFromAttribute(element, attributeName, size, shado
  size = (typeof size === "number" && size > 0) ? size : 64;
  shadowColor = (typeof shadowColor === "string") ? shadowColor : null;
  
+ if (!element.hasAttribute(attributeName)) {
+  element.setAttribute(attributeName, "");
+ }
+ 
  setEmojiFavicon(element.getAttribute(attributeName), size, shadowColor);
  
  const emojiFaviconObserver = new MutationObserver(mutations => {
