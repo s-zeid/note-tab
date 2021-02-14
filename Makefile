@@ -5,7 +5,7 @@ all: index.html
 
 wbn: note-tab.wbn
 note-tab.wbn: url := https://note-tab.bnay.me/
-note-tab.wbn: main.html main.css main.js utils.js LICENSE.txt README.md
+note-tab.wbn: main.html main.css main.js utils.js emoji-favicon.js LICENSE.txt README.md
 	mkdir -p wbn-tmp
 	cp -pr $^ wbn-tmp/
 	mv wbn-tmp/main.html wbn-tmp/index.html

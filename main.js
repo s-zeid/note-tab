@@ -1,3 +1,4 @@
+import EmojiFavicon from "./emoji-favicon.js";
 import * as Utils from "./utils.js";
 
 
@@ -263,14 +264,11 @@ class App {
    this.save();
    this.els.title.field.focus();
   }
-  
-  if (!document.head.querySelector("link[rel='icon']")) {
-   Utils.setEmojiFaviconFromAttribute(document.documentElement, "data-emoji-favicon");
-  }
  }
 }
 
 
+window.EmojiFavicon = EmojiFavicon;
 window.Utils = Utils;
 window.app = new App(document.querySelector("main"));
 window.addEventListener("DOMContentLoaded", () => app.main());
