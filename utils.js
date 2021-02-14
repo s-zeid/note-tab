@@ -132,33 +132,29 @@ export function setEmojiFaviconFromAttribute(element, attributeName, size, force
  size = (typeof size === "number" && size > 0) ? size : 64;
  forceShadowColor = (typeof forceShadowColor === "string") ? forceShadowColor : null;
  
- function parse(emoji, forceShadowColor) {
-  emoji = (typeof emoji === "string") ? emoji.trim() : "";
-  forceShadowColor = (typeof forceShadowColor === "string") ? forceShadowColor.trim() : null;
-  
-  let shadowColor = forceShadowColor;
-  const emojiShadowColorSplitIndex = emoji.search(/[ #0-9a-zA-Z]/);
-  if (emojiShadowColorSplitIndex > -1) {
-   if (!shadowColor) {
-    shadowColor = emoji.substring(emojiShadowColorSplitIndex).trim();
-   }
-   emoji = emoji.substring(0, emojiShadowColorSplitIndex).trim();
-  }
-  return [emoji, shadowColor];
- }
- 
  if (!element.hasAttribute(attributeName)) {
   element.setAttribute(attributeName, "");
  }
  
- const parsed = parse(element.getAttribute(attributeName), forceShadowColor);
- setEmojiFavicon.apply(null, parsed.concat([size]));
+ function parse(attributeValue, forceShadowColor) {
+  attributeValue = (typeof attributeValue === "string") ? attributeValue.trim() : "";
+  forceShadowColor = (typeof forceShadowColor === "string") ? forceShadowColor.trim() : null;
+  
+  const valueParts = attributeValue.split(" ");
+  const emoji = valueParts.splice(0, 1)[0].trim();
+  const shadowColor = (forceShadowColor || valueParts.splice(0, 1)[0] || "").trim();
+  
+  return [emoji, shadowColor];
+ }
+ 
+ const args = parse(element.getAttribute(attributeName), forceShadowColor);
+ setEmojiFavicon.apply(null, args.concat([size]));
  
  const emojiFaviconObserver = new MutationObserver(mutations => {
   for (const mutation of mutations) {
    if (mutation.attributeName === attributeName) {
-    const parsed = parse(element.getAttribute(attributeName), forceShadowColor);
-    setEmojiFavicon.apply(null, parsed.concat([size]));
+    const args = parse(element.getAttribute(attributeName), forceShadowColor);
+    setEmojiFavicon.apply(null, args.concat([size]));
    }
   }
  });
