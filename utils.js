@@ -4,7 +4,7 @@ export class StructuredCloneHash {
  // Any actual null bytes in the data contained in `hash` should be escaped,
  // e.g. with `encodeURIComponent()`.
  // 
- // Example: <https://code.s.zeid.me/bin/blob/master/sessionstore2html>
+ // Example: <https://code.s.zeid.me/bin/blob/main/sessionstore2html>
  // (search for "note_tab_magic")
  
  static decode(hash, uuid) {
