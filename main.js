@@ -203,7 +203,7 @@ class App {
  
  saveOnKeyUp(e) {
   let isTitle = e.target === this.els.title.field;
-  if ((e.ctrlKey || e.metaKey || isTitle) && e.code.match(/^(Numpad)?Enter$/))
+  if ((e.ctrlKey || e.metaKey || isTitle) && e.code.match(/^(Numpad)?(Enter|Return)$/))
    return this.save();
  }
  
