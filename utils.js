@@ -29,17 +29,22 @@ export class StructuredCloneHash {
 }
 
 
-export function autoResizeInput(el) {
+export function autoResizeInput(el, styleEl, styleProp = "width") {
+  function resolveStyleEl() {
+    return ((typeof styleEl == "function") ? styleEl(el) : styleEl) || el;
+  }
+
   function listener() {
     let isEmpty = !el.value.length;
     if (isEmpty && el.placeholder) {
       el.value = el.placeholder;
     }
 
-    el.style.width = "0px";
+    const styleElResult = resolveStyleEl();
+    styleElResult.style.setProperty(styleProp, "0px");
 
     let width = el.scrollWidth + window.devicePixelRatio;
-    el.style.width = `${width}px`;
+    styleElResult.style.setProperty(styleProp, `${width}px`);
 
     if (isEmpty) {
       el.value = "";
@@ -50,26 +55,44 @@ export function autoResizeInput(el) {
   el.addEventListener("x-autoresize-update", listener);
   window.addEventListener("resize", listener);
   listener();
+  return {
+    listener,
+    cleanup: () => {
+      el.removeEventListener("input", listener);
+      el.removeEventListener("x-autoresize-update", listener);
+      window.removeEventListener("resize", listener);
+      resolveStyleEl().style.removeProperty(styleProp);
+    },
+  };
 }
 
 
-export function autoResizeTextarea(el) {
-  if (!el.style.minHeight) {
-    el.style.setProperty("--computed-line-height", window.getComputedStyle(el).lineHeight);
-    el.style.minHeight = "calc(var(--computed-line-height) * 3 + 1px)";
+export function autoResizeTextarea(el, styleEl, styleProp = "height") {
+  function resolveStyleEl() {
+    return ((typeof styleEl == "function") ? styleEl(el) : styleEl) || el;
   }
 
   function listener() {
-    el.style.height = "auto";
+    const styleElResult = resolveStyleEl();
+    styleElResult.style.setProperty(styleProp, "auto");
 
     let height = el.scrollHeight + window.devicePixelRatio;
-    el.style.height = `${height}px`;
+    styleElResult.style.setProperty(styleProp, `${height}px`);
   }
 
   el.addEventListener("input", listener);
   el.addEventListener("x-autoresize-update", listener);
   window.addEventListener("resize", listener);
   listener();
+  return {
+    listener,
+    cleanup: () => {
+      el.removeEventListener("input", listener);
+      el.removeEventListener("x-autoresize-update", listener);
+      window.removeEventListener("resize", listener);
+      resolveStyleEl().style.removeProperty(styleProp);
+    },
+  };
 }
 
 
@@ -87,4 +110,15 @@ export function formatFromAttribute(el, attr, replaceFunction) {
     el.setAttribute(attr, result);
   }
   return result;
+}
+
+export function setComputedLineHeight(el, styleEl) {
+  function resolveStyleEl() {
+    return ((typeof styleEl == "function") ? styleEl(el) : styleEl) || el;
+  }
+
+  resolveStyleEl().style.setProperty(
+    "--computed-line-height",
+    window.getComputedStyle(el).lineHeight,
+  );
 }

@@ -107,36 +107,38 @@ fieldset {
   text-overflow: ellipsis;
 }
 
-#title > input, #body > textarea {
+#title > input, #body > note-tab-textinput {
   display: block;
   border: none;
   border-bottom: 2px solid var(--color-inactive);
   transition: border-bottom 0.125s linear;
-  font-size: inherit;
+  background: inherit; color: inherit; font: inherit;
 }
-#title > input:focus, #body > textarea:focus {
+#title > input:focus, #body > note-tab-textinput:focus-within {
   border-bottom-color: var(--color-active);
   outline: none;
 }
-#title > input::placeholder, #body > textarea::placeholder {
+#title > input::placeholder, #body > note-tab-textinput::placeholder {
   color: var(--color-inactive); opacity: 1;
 }
 
 #body {
   grid-column: span 2;
 }
-#body > textarea {
-  width: calc(100% - 2px); max-height: calc(100% - 2px * 2);
-  padding: 0; padding-inline-end: 2px;
+#body > note-tab-textinput {
+  max-height: calc(100% - 2px);
   line-height: inherit;
   resize: none;
+}
+#body > note-tab-textinput > * {
+  width: calc(100% - 2px); padding: 0; padding-inline-end: 2px;
   scrollbar-width: thin;
 }
-#body > textarea::-webkit-scrollbar {
+#body > note-tab-textinput > *::-webkit-scrollbar {
   width: 6px;
 }
 @supports (color: -webkit-link) {
-  #body > textarea {
+  #body > note-tab-textinput {
     max-height: calc(100% - 2px * 1);  /* wat - <https://i.imgur.com/IppKJ.jpg> */
   }
 }
@@ -179,7 +181,7 @@ fieldset {
     display: block; height: auto;
     background: initial; color: initial; font: initial;
   }
-  #toolbar, #title > input, #body > textarea {
+  #toolbar, #title > input, #body > note-tab-textinput {
     display: none;
   }
   fieldset > pre {

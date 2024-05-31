@@ -1,5 +1,6 @@
 import EmojiFavicon from "./emoji-favicon.js";
 import * as Utils from "./utils.js";
+import * as NTTextInput from "./textinput.js";
 
 
 class App {
@@ -18,7 +19,7 @@ class App {
         print: container.querySelector("#title > pre"),
       },
       body: {
-        field: container.querySelector("#body > textarea"),
+        field: container.querySelector("#body > note-tab-textinput"),
         print: container.querySelector("#body > pre"),
       },
       link: container.querySelector("#link"),
@@ -62,7 +63,6 @@ class App {
     this.els.title.field.dispatchEvent(new CustomEvent("x-autoresize-update"));
 
     this.els.body.field.value = params.get("body") || "";
-    this.els.body.field.dispatchEvent(new CustomEvent("x-autoresize-update"));
 
     this.update(false);
 
@@ -273,7 +273,6 @@ class App {
     }
 
     Utils.autoResizeInput(this.els.title.field);
-    Utils.autoResizeTextarea(this.els.body.field);
 
     if (!this.els.title.field.value && !this.els.body.field.value) {
       this.save();
@@ -284,6 +283,7 @@ class App {
 
 
 window.EmojiFavicon = EmojiFavicon;
+window.NTTextInput = NTTextInput;
 window.Utils = Utils;
 window.app = new App(document.querySelector("main"));
 window.addEventListener("DOMContentLoaded", () => app.main());
