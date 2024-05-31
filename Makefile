@@ -8,7 +8,7 @@ clean:
 
 
 HOST := s.zeid.me
-DIR  := ~/srv/www/bnay.me/_/note-tab
+DIR  := ~/srv/www/bnay.me/srv/_/note-tab
 
 deploy:
 	ssh $(HOST) 'cd $(DIR); pwd; git pull && git submodule update && make'
