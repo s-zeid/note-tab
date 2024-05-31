@@ -1,195 +1,195 @@
 /* Base */
 
 /* Eventually, modern browsers will support CSS 4 System Colors
- * (<https://www.w3.org/TR/css-color-4/#css-system-colors>).  Until
- * then, browser-specific stuff is needed.
- *
- * See:
- * <https://bugzilla.mozilla.org/show_bug.cgi?id=1590894>
- * <https://bugs.chromium.org/p/chromium/issues/detail?id=1015968#makechanges>
- * <https://www.chromestatus.com/feature/5678291530809344>
- * */
+  * (<https://www.w3.org/TR/css-color-4/#css-system-colors>).  Until
+  * then, browser-specific stuff is needed.
+  *
+  * See:
+  * <https://bugzilla.mozilla.org/show_bug.cgi?id=1590894>
+  * <https://bugs.chromium.org/p/chromium/issues/detail?id=1015968#makechanges>
+  * <https://www.chromestatus.com/feature/5678291530809344>
+  * */
 
 :root {
- --color-background: Window;
- --color-foreground: WindowText;
- --color-inactive: GrayText;
- --color-active: Highlight;
- --font-main: caption;
+  --color-background: Window;
+  --color-foreground: WindowText;
+  --color-inactive: GrayText;
+  --color-active: Highlight;
+  --font-main: caption;
 }
 
 @supports (color: Field) {
- :root {
-  --color-background: Field;
-  --color-foreground: FieldText;
- }
+  :root {
+    --color-background: Field;
+    --color-foreground: FieldText;
+  }
 }
 
 @supports (color: -webkit-link) {
- :root {
-  --color-active: -webkit-link;
- }
+  :root {
+    --color-active: -webkit-link;
+  }
 }
 
 @supports (color: -moz-nativehyperlinktext) {
- /* TODO: see if Mozilla implements LinkText as -moz-nativehyperlinktext
-  * as per <https://bugzilla.mozilla.org/show_bug.cgi?id=1590894#c5> */
- :root {
-  --color-active: -moz-nativehyperlinktext;
- }
+  /* TODO: see if Mozilla implements LinkText as -moz-nativehyperlinktext
+    * as per <https://bugzilla.mozilla.org/show_bug.cgi?id=1590894#c5> */
+  :root {
+    --color-active: -moz-nativehyperlinktext;
+  }
 }
 
 :root, input, textarea {
- background: var(--color-background);
- color: var(--color-foreground);
- font: var(--font-main);
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font: var(--font-main);
 }
 input, textarea {
- background: transparent;
+  background: transparent;
 }
 a, a:hover, a:visited {
- color: var(--color-active);
- text-decoration: none;
+  color: var(--color-active);
+  text-decoration: none;
 }
 a:hover {
- text-decoration: underline;
+  text-decoration: underline;
 }
 
 :root {
- scrollbar-width: auto;
- scrollbar-color: var(--color-inactive) transparent;
+  scrollbar-width: auto;
+  scrollbar-color: var(--color-inactive) transparent;
 }
 ::-webkit-scrollbar {
- width: 12px;
+  width: 12px;
 }
 ::-webkit-scrollbar-thumb {
- --scrollbar-tint: rgba(255, 255, 255, 0.375);
- background: linear-gradient(var(--scrollbar-tint), var(--scrollbar-tint)),
-             var(--color-inactive);
- opacity: 0.4;
+  --scrollbar-tint: rgba(255, 255, 255, 0.375);
+  background: linear-gradient(var(--scrollbar-tint), var(--scrollbar-tint)),
+                          var(--color-inactive);
+  opacity: 0.4;
 }
 @media (prefers-color-scheme: dark) {
- ::-webkit-scrollbar-thumb {
-  --scrollbar-tint: rgba(0, 0, 0, 0.375);
- }
+  ::-webkit-scrollbar-thumb {
+    --scrollbar-tint: rgba(0, 0, 0, 0.375);
+  }
 }
 ::-webkit-scrollbar-track {
- background: transparent;
+  background: transparent;
 }
 
 
 /* App */
 
 :root, body, main {
- height: 100%; margin: 0;
+  height: 100%; margin: 0;
 }
 
 main {
- display: grid;
- grid: min-content minmax(0, min-content) / minmax(0, 1fr) min-content;
- grid-gap: var(--row-gap) 0.5em; --row-gap: 1em;  /* variable is for @print below */
- padding: 0.75em; box-sizing: border-box;
- line-height: 1.25;
- --header-font-size: 2em;
+  display: grid;
+  grid: min-content minmax(0, min-content) / minmax(0, 1fr) min-content;
+  grid-gap: var(--row-gap) 0.5em; --row-gap: 1em;  /* variable is for @print below */
+  padding: 0.75em; box-sizing: border-box;
+  line-height: 1.25;
+  --header-font-size: 2em;
 }
 fieldset {
- border: none; margin: 0; padding: 0; min-width: auto;
+  border: none; margin: 0; padding: 0; min-width: auto;
 }
 
 #title {
- margin-top: -0.125em;
- font-size: var(--header-font-size);
+  margin-top: -0.125em;
+  font-size: var(--header-font-size);
 }
 #title > input {
- max-width: 100%; height: 1.25em; padding-inline-start: 0;
+  max-width: 100%; height: 1.25em; padding-inline-start: 0;
 }
 #title > input:not(:focus) {
- text-overflow: ellipsis;
+  text-overflow: ellipsis;
 }
 
 #title > input, #body > textarea {
- display: block;
- border: none;
- border-bottom: 2px solid var(--color-inactive);
- transition: border-bottom 0.125s linear;
- font-size: inherit;
+  display: block;
+  border: none;
+  border-bottom: 2px solid var(--color-inactive);
+  transition: border-bottom 0.125s linear;
+  font-size: inherit;
 }
 #title > input:focus, #body > textarea:focus {
- border-bottom-color: var(--color-active);
- outline: none;
+  border-bottom-color: var(--color-active);
+  outline: none;
 }
 #title > input::placeholder, #body > textarea::placeholder {
- color: var(--color-inactive); opacity: 1;
+  color: var(--color-inactive); opacity: 1;
 }
 
 #body {
- grid-column: span 2;
+  grid-column: span 2;
 }
 #body > textarea {
- width: calc(100% - 2px); max-height: calc(100% - 2px * 2);
- padding: 0; padding-inline-end: 2px;
- line-height: inherit;
- resize: none;
- scrollbar-width: thin;
+  width: calc(100% - 2px); max-height: calc(100% - 2px * 2);
+  padding: 0; padding-inline-end: 2px;
+  line-height: inherit;
+  resize: none;
+  scrollbar-width: thin;
 }
 #body > textarea::-webkit-scrollbar {
- width: 6px;
+  width: 6px;
 }
 @supports (color: -webkit-link) {
- #body > textarea {
-  max-height: calc(100% - 2px * 1);  /* wat - <https://i.imgur.com/IppKJ.jpg> */
- }
+  #body > textarea {
+    max-height: calc(100% - 2px * 1);  /* wat - <https://i.imgur.com/IppKJ.jpg> */
+  }
 }
 
 #toolbar {
- grid-area: 1 / 2;
- display: flex;
- color: var(--color-active);
+  grid-area: 1 / 2;
+  display: flex;
+  color: var(--color-active);
 }
 #toolbar > * {
- display: inline-flex; align-items: center; justify-content: center;
- width: 1.1875em; height: 1.1875em;
- margin-left: 0.25em;
- font-size: var(--header-font-size);
- /* `a { color: -webkit-link; }` causes visited links to be colored differently */
- color: inherit;
- outline: 2px solid transparent;
- transition: outline-color 0.125s linear;
- background: none; border: none; cursor: pointer; padding: 0;
- -webkit-tap-highlight-color: transparent;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.1875em; height: 1.1875em;
+  margin-left: 0.25em;
+  font-size: var(--header-font-size);
+  /* `a { color: -webkit-link; }` causes visited links to be colored differently */
+  color: inherit;
+  outline: 2px solid transparent;
+  transition: outline-color 0.125s linear;
+  background: none; border: none; cursor: pointer; padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 #toolbar > *:focus {
- outline-color: inherit;
+  outline-color: inherit;
 }
 #toolbar > button::-moz-focus-inner {
- border: none; padding: 0;
+  border: none; padding: 0;
 }
 #toolbar > * > svg {
- width: calc(var(--size) * 1px); height: calc(var(--size) * 1px);
+  width: calc(var(--size) * 1px); height: calc(var(--size) * 1px);
 }
 
 @media screen and (max-width: 480px) {
- main {
-  --header-font-size: 1.5em;
- }
+  main {
+    --header-font-size: 1.5em;
+  }
 }
 
 @media print {
- :root, body, main {
-  display: block; height: auto;
-  background: initial; color: initial; font: initial;
- }
- #toolbar, #title > input, #body > textarea {
-  display: none;
- }
- fieldset > pre {
-  display: block;
-  margin: 0;
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
-  font: inherit;
- }
- #body {
-  margin-top: var(--row-gap);
- }
+  :root, body, main {
+    display: block; height: auto;
+    background: initial; color: initial; font: initial;
+  }
+  #toolbar, #title > input, #body > textarea {
+    display: none;
+  }
+  fieldset > pre {
+    display: block;
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    font: inherit;
+  }
+  #body {
+    margin-top: var(--row-gap);
+  }
 }
