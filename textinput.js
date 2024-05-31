@@ -133,6 +133,14 @@ const element = class NTTextInputElement extends HTMLElement {
     }
   }
 
+  blur() {
+    this.adapter.element.blur();
+  }
+
+  focus() {
+    this.adapter.element.focus();
+  }
+
   #adapter = null;
 
   #setupPrivateStyleProps() {
