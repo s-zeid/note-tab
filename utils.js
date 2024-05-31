@@ -8,10 +8,12 @@ export class StructuredCloneHash {
   // (search for "note_tab_magic")
 
   static decode(hash, uuid) {
-    if (uuid && !hash.startsWith("urn:uuid:" + uuid))
+    if (uuid && !hash.startsWith("urn:uuid:" + uuid)) {
       throw new RangeError("UUIDs do not match");
-    if (!hash.includes("#"))
+    }
+    if (!hash.includes("#")) {
       throw new RangeError("encoded hash must contain a `#`");
+    }
 
     let start = hash.indexOf("#");
     let end = hash.indexOf("\0");
@@ -19,8 +21,9 @@ export class StructuredCloneHash {
   }
 
   static encode(hash, uuid) {
-    if (!hash.startsWith("#"))
+    if (!hash.startsWith("#")) {
       throw new RangeError("hash must start with `#`");
+    }
     return "urn:uuid:" + uuid + hash + "\0";
   }
 }
@@ -29,16 +32,18 @@ export class StructuredCloneHash {
 export function autoResizeInput(el) {
   function listener() {
     let isEmpty = !el.value.length;
-    if (isEmpty && el.placeholder)
+    if (isEmpty && el.placeholder) {
       el.value = el.placeholder;
+    }
 
     el.style.width = "0px";
 
     let width = el.scrollWidth + window.devicePixelRatio;
     el.style.width = `${width}px`;
 
-    if (isEmpty)
+    if (isEmpty) {
       el.value = "";
+    }
   }
 
   el.addEventListener("input", listener);
@@ -70,8 +75,9 @@ export function autoResizeTextarea(el) {
 
 export function formatFromAttribute(el, attr, replaceFunction) {
   let dataAttr = attr + "Format";
-  if (!el.dataset[dataAttr])
+  if (!el.dataset[dataAttr]) {
     el.dataset[dataAttr] = el.getAttribute(attr);
+  }
 
   let format = el.dataset[dataAttr];
 

@@ -5,7 +5,6 @@ export default
 class EmojiFavicon {
   static DEFAULT_ATTRIBUTE_NAME() { return "data-emoji-favicon"; }
 
-
   static set(emoji, shadowColor, size) {
     shadowColor = (typeof shadowColor === "string") ? shadowColor : null;
     size = (typeof size === "number" && size > 0) ? size : 64;
@@ -21,10 +20,9 @@ class EmojiFavicon {
     }
   }
 
-
   static setFromAttribute(element, attributeName, size, forceShadowColor) {
     attributeName = (typeof attributeName === "string" && attributeName)
-                                    ? attributeName : this.DEFAULT_ATTRIBUTE_NAME();
+                     ? attributeName : this.DEFAULT_ATTRIBUTE_NAME();
     size = (typeof size === "number" && size > 0) ? size : 64;
     forceShadowColor = (typeof forceShadowColor === "string") ? forceShadowColor : null;
 
@@ -32,13 +30,19 @@ class EmojiFavicon {
       element.setAttribute(attributeName, "");
     }
 
-    const args = this.parseAttributeValue(element.getAttribute(attributeName), forceShadowColor);
+    const args = this.parseAttributeValue(
+      element.getAttribute(attributeName),
+      forceShadowColor,
+    );
     this.set.apply(this, args.concat([size]));
 
     const emojiFaviconObserver = new MutationObserver(mutations => {
       for (const mutation of mutations) {
         if (mutation.attributeName === attributeName) {
-          const args = this.parseAttributeValue(element.getAttribute(attributeName), forceShadowColor);
+          const args = this.parseAttributeValue(
+            element.getAttribute(attributeName),
+            forceShadowColor,
+          );
           this.set.apply(this, args.concat([size]));
         }
       }
@@ -47,7 +51,6 @@ class EmojiFavicon {
 
     return emojiFaviconObserver;
   }
-
 
   static parseAttributeValue(attributeValue, forceShadowColor) {
     attributeValue = (typeof attributeValue === "string") ? attributeValue.trim() : "";
@@ -59,7 +62,6 @@ class EmojiFavicon {
 
     return [emoji, shadowColor];
   }
-
 
   static renderEmoji(emoji, shadowColor, size) {
     emoji = (typeof emoji === "string") ? emoji.trim() : "";

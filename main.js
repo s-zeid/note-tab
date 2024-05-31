@@ -66,38 +66,45 @@ class App {
 
     this.update(false);
 
-    if (!window.history.state)
+    if (!window.history.state) {
       this.save(false);
+    }
 
     this.state.loaded = true;
   }
 
   update(doState) {
-    if (typeof doState === "undefined")
+    if (typeof doState === "undefined") {
       doState = true;
+    }
 
-    if (doState)
+    if (doState) {
       this.state.saved = false;
+    }
 
     let hash = this.makeHash();
     this.els.link.href = hash;
     this.setDocumentTitle();
 
-    if (doState)
+    if (doState) {
       this.replaceState(hash);
+    }
   }
 
   setDocumentTitle() {
     let title = this.els.title.field.value || this.els.title.field.placeholder;
-    if (this.state.saved === false)
+    if (this.state.saved === false) {
       title = "* " + title;
-    if (document.title != title)
+    }
+    if (document.title != title) {
       document.title = title;
+    }
   }
 
   save(saveHash) {
-    if (typeof saveHash === "undefined")
+    if (typeof saveHash === "undefined") {
       saveHash = true;
+    }
 
     this.state.saved = true;
     this.setDocumentTitle();
@@ -117,8 +124,9 @@ class App {
       if (file.name.match(typeRegExp)) {
         let typeParts = file.name.split(".");
         let typeCandidate = typeParts[typeParts.length - 2];
-        if (!typeCandidate.startsWith(" "))
+        if (!typeCandidate.startsWith(" ")) {
           type = typeCandidate.replace(/( \([0-9]+\)|-[0-9]+)$/, "");
+        }
       }
 
       const titleRegExp = /^[^\n]*\r?\n=+\r?\n(\r?\n)?/m;
@@ -130,10 +138,11 @@ class App {
       } else {
         body = contents;
       }
-      if (body.substring(body.length - 2) === "\r\n")
+      if (body.substring(body.length - 2) === "\r\n") {
         body = body.substring(0, body.length - 2);
-      else if (body.substring(body.length - 1) === "\n")
+      } else if (body.substring(body.length - 1) === "\n") {
         body = body.substring(0, body.length - 1);
+      }
 
       this.els.type.field.value = type;
       this.els.title.field.value = title;
@@ -173,12 +182,13 @@ class App {
     let keys = ["type", "title", "body"];
     let params = [];
     for (let key of keys) {
-      if (this.els[key] && this.els[key].field && this.els[key].field.value)
+      if (this.els[key] && this.els[key].field && this.els[key].field.value) {
         params.push(
           encodeURIComponent(key) +
           "=" +
-          encodeURIComponent(this.els[key].field.value)
+          encodeURIComponent(this.els[key].field.value),
         );
+      }
     }
     return "#" + params.join("&");
   }
@@ -190,21 +200,24 @@ class App {
       saved: this.state.saved,
     };
     let url = undefined;
-    if (saveHash)
+    if (saveHash) {
       url = this.baseURI + stateHash;
+    }
     window.history.replaceState(state, document.title, url);
   }
 
   updateOnInput(e) {
-    if (e.isComposing)
+    if (e.isComposing) {
       return;
+    }
     this.update();
   }
 
   saveOnKeyUp(e) {
     let isTitle = e.target === this.els.title.field;
-    if ((e.ctrlKey || e.metaKey || isTitle) && e.code.match(/^(Numpad)?(Enter|Return)$/))
+    if ((e.ctrlKey || e.metaKey || isTitle) && e.code.match(/^(Numpad)?(Enter|Return)$/)) {
       return this.save();
+    }
   }
 
   main() {
@@ -242,8 +255,9 @@ class App {
     document.documentElement.addEventListener("keyup", e => this.saveOnKeyUp(e));
 
     this.els.link.addEventListener("click", e => {
-      if (!(e.altKey || e.ctrlKey || e.metaKey || e.shiftKey))
+      if (!(e.altKey || e.ctrlKey || e.metaKey || e.shiftKey)) {
         e.preventDefault();
+      }
       this.save();
     });
 
@@ -254,8 +268,9 @@ class App {
     this.els.open.addEventListener("click", () => this.els.file.click());
 
     this.els.container.style.display = null;
-    if (!this.els.container.style.cssText)
+    if (!this.els.container.style.cssText) {
       this.els.container.removeAttribute("style");
+    }
 
     Utils.autoResizeInput(this.els.title.field);
     Utils.autoResizeTextarea(this.els.body.field);
