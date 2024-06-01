@@ -115,6 +115,7 @@ class App {
     if (this.els.file.files.length) {
       let file = this.els.file.files[0];
       let contents = await file.text();
+      this.els.file.value = "";
       this.state.saved = false;
 
       // Use the type from the filename (of the format `<title>.<type>.txt`)
