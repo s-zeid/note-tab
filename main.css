@@ -31,6 +31,18 @@
   }
 }
 
+@supports (color: LinkText) {
+  :root {
+    --color-active: LinkText;
+  }
+}
+
+@supports (color: AccentColor) {
+  :root {
+    --color-active: AccentColor;
+  }
+}
+
 @supports (color: -moz-nativehyperlinktext) {
   /* TODO: see if Mozilla implements LinkText as -moz-nativehyperlinktext
     * as per <https://bugzilla.mozilla.org/show_bug.cgi?id=1590894#c5> */
