@@ -117,6 +117,7 @@ const element = class NTTextInputElement extends HTMLElement {
     let selection = null;
     if (this.#adapter) {
       value.value = this.#adapter.value;
+      value.clearHistory();
       focus = this.#adapter.focusElement === this.shadowRoot.activeElement;
       selection = this.getSelectedCharacterRange();
     }
@@ -201,6 +202,10 @@ const element = class NTTextInputElement extends HTMLElement {
     return this.adapter.setSelectedCharacterRange(start, end, direction, text);
   }
 
+  clearHistory() {
+    return this.adapter.clearHistory();
+  }
+
   updatePlaceholderVisibility(value) {
     value ??= this.value;
     this.placeholderElement.hidden = (value || "").length != 0;
@@ -269,6 +274,10 @@ export class Adapter {
   setSelectedCharacterRange(start, end, direction, text) {
     throw new NotImplementedError();
   }
+
+  clearHistory() {
+    throw new NotImplementedError();
+  }
 }
 
 
@@ -329,6 +338,13 @@ export class TextAreaAdapter extends Adapter {
         this.element.blur();
       }
     }
+  }
+
+  clearHistory() {
+    const value = this.element.value;
+    this.element.value = "1";
+    this.element.value = "2";
+    this.element.value = value;
   }
 }
 

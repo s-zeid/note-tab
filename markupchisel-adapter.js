@@ -121,4 +121,8 @@ const adapter = class MarkupChiselAdapter extends TextInput.Adapter {
     const selection = state.EditorSelection.single(anchor, head);
     this.markupChisel.dispatch({ selection });
   }
+
+  clearHistory() {
+    this.markupChisel.clearHistory();
+  }
 }
