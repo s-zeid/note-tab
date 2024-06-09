@@ -68,8 +68,8 @@ Body
 ...
 ```
 
-The note type (`type=...` in the hash) is saved to the end of the filename,
-before the file extension, e.g. `Title.type.txt`.
+The note type (`type=___.md` in the hash) is saved to the end of the filename,
+before the file extension, e.g. `Title.type.md`.
 
 When loading a file, the title is always loaded from the file's contents.
 If the file does not contain a title in the format shown above, then the
@@ -77,7 +77,7 @@ title used will be the empty string.  The type is loaded from the filename
 using the format shown above if the following rules are all true.  If
 they are not true, then the default type ("note") is used.
 
-* The filename ends in ".txt",
+* The filename ends with an alphanumeric file extension (e.g. `.md` or `.txt`),
 * `type` only contains letters, spaces, and/or code points above U+007F
   (e.g. accented letters or non-Latin scripts), and optionally
   a " (`digit(s)`)" or "-`digit(s)`" suffix (sometimes added by browsers

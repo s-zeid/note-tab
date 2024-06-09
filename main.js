@@ -4,9 +4,11 @@ import * as NTTextInput from "./textinput.js";
 
 
 class App {
-  get MAGIC() {
-    return "46e56985-cff3-45fd-b1b7-c5f84fbb921c";
-  }
+  get MAGIC() { return "46e56985-cff3-45fd-b1b7-c5f84fbb921c"; }
+
+  get KNOWN_EXTENSIONS() { return [".md", ".txt"]; }  
+  get DEFAULT_EXTENSION() { return ".md"; }
+  get DEFAULT_TYPE_NAME() { return "note"; }
 
   constructor(container) {
     this.els = {
@@ -39,7 +41,15 @@ class App {
     this.initialTitle = null;
   }
 
-  load() {
+  get typeName() {
+    return this.els.type.field.value.replace(/\.[^.]*$/, "");
+  }
+
+  get typeExtension() {
+    return this.els.type.field.value.match(/\.[^.]*$/)?.[0] || "";
+  }
+
+  async load() {
     let historyState = window.history.state || {
       hash: window.location.hash,
       saved: true,
@@ -47,17 +57,38 @@ class App {
     this.state.saved = historyState.saved;
 
     let hash = Utils.StructuredCloneHash.decode(historyState.hash || "#");
+    if (hash == "#test") {
+      const testParams = new URLSearchParams();
+      testParams.set("type", `${this.DEFAULT_TYPE_NAME}${this.DEFAULT_EXTENSION}`);
+      testParams.set("title", "note test");
+      testParams.set("body", (await import("./lib/test-document.js")).default);
+      hash = this.makeHash(testParams);
+      this.replaceState(hash, true);
+    }
     let params = new URLSearchParams(hash.substring(1));
 
     let type = params.get("type") || this.els.type.field.dataset["default"];
+    if (type.startsWith(".")) {
+      type = this.els.type.field.dataset["default"].replace(/\.[a-z0-9]+$/i, "") + type;
+    }
+    if (!type.replace(/\.+$/, "").includes(".")) {
+      type = type.replace(/\.+$/, "") + this.DEFAULT_EXTENSION;
+    }
+    if (type != params.get("type")) {
+      type = type;
+      params.set("type", type);
+      hash = this.makeHash(params);
+      this.replaceState(hash, true);
+    }
     this.els.type.field.value = type;
+    const typeName = this.typeName;
     Utils.formatFromAttribute(this.els.new_, "href", f => {
       f = f.replace("{0}", this.baseURI);
       f = f.replace("{1}", type);
       return f;
     });
-    Utils.formatFromAttribute(this.els.new_, "title", f => f.replace("{0}", type));
-    Utils.formatFromAttribute(this.els.title.field, "placeholder", f => f.replace("{0}", type));
+    Utils.formatFromAttribute(this.els.new_, "title", f => f.replace("{0}", typeName));
+    Utils.formatFromAttribute(this.els.title.field, "placeholder", f => f.replace("{0}", typeName));
 
     this.els.title.field.value = params.get("title") || "";
     this.els.title.field.dispatchEvent(new CustomEvent("x-autoresize-update"));
@@ -120,14 +151,27 @@ class App {
 
       // Use the type from the filename (of the format `<title>.<type>.txt`)
       // if the filename matches the rules listed in <README.md#file-format>.
-      const typeRegExp = /[^.]\.([a-zA-Z ]|[^\u0000-\u007f])+( \([0-9]+\)|-[0-9]+)?\.txt$/i;
+      const typeRegExp = /[^.]\.([a-zA-Z ]|[^\u0000-\u007f])+( \([0-9]+\)|-[0-9]+)?\.[a-z0-9]+$/i;
       let type = this.els.type.field.dataset["default"];
+      let typeName = "", typeExtension = "";
       if (file.name.match(typeRegExp)) {
         let typeParts = file.name.split(".");
         let typeCandidate = typeParts[typeParts.length - 2];
         if (!typeCandidate.startsWith(" ")) {
-          type = typeCandidate.replace(/( \([0-9]+\)|-[0-9]+)$/, "");
+          typeName = typeCandidate.replace(/( \([0-9]+\)|-[0-9]+)$/, "");
         }
+        typeExtension = "." + typeParts[typeParts.length - 1].toLowerCase();
+      } else if (file.name.match(/\.[a-z0-9]+$/i)) {
+        let filenameParts = file.name.split(".");
+        typeExtension = "." + filenameParts[filenameParts.length - 1].toLowerCase();
+      }
+      if (!this.KNOWN_EXTENSIONS.includes(typeExtension)) {
+        typeExtension = "";
+      }
+      if (typeName) {
+        type = typeName + typeExtension;
+      } else if (typeExtension) {
+        type = type.replace(/\.[^.]+$/, "") + typeExtension;
       }
 
       const titleRegExp = /^[^\n]*\r?\n=+\r?\n(\r?\n)?/m;
@@ -149,7 +193,7 @@ class App {
       this.els.title.field.value = title;
       this.els.body.field.value = body;
       this.save();
-      this.load();
+      await this.load();
     }
   }
 
@@ -171,7 +215,7 @@ class App {
 
     let a = document.createElement("a");
     a.href = url;
-    a.download = `${title}.${this.els.type.field.value}.txt`.replace("/", "\u2044");
+    a.download = `${title}.${this.els.type.field.value}`.replace("/", "\u2044");
     a.style.display = "none";
     this.els.download.parentElement.insertBefore(a, this.els.download);
     a.click();
@@ -179,15 +223,21 @@ class App {
     window.setTimeout(() => URL.revokeObjectURL(url), 2000);
   }
 
-  makeHash() {
+  makeHash(searchParams) {
     let keys = ["type", "title", "body"];
     let params = [];
     for (let key of keys) {
-      if (this.els[key] && this.els[key].field && this.els[key].field.value) {
+      let value;
+      if (searchParams?.get(key)) {
+        value = searchParams.get(key);
+      } else {
+        value = this.els[key].field.value;
+      }
+      if (value) {
         params.push(
           encodeURIComponent(key) +
           "=" +
-          encodeURIComponent(this.els[key].field.value),
+          encodeURIComponent(value),
         );
       }
     }
@@ -221,11 +271,17 @@ class App {
     }
   }
 
-  main() {
+  async main() {
     this.baseURI = window.location.href.replace(/#.*$/, "");
     this.initialTitle = document.title;
 
-    this.load();
+    Utils.formatFromAttribute(this.els.type.field, "data-default", f => {
+      f = f.replace("{0}", this.DEFAULT_TYPE_NAME);
+      f = f.replace("{1}", this.DEFAULT_EXTENSION);
+      return f;
+    });
+
+    await this.load();
 
     window.addEventListener("beforeprint", e => {
       const title = this.els.title, body = this.els.body;
@@ -239,9 +295,9 @@ class App {
       }
     });
 
-    window.addEventListener("hashchange", e => {
+    window.addEventListener("hashchange", async (event) => {
       window.history.replaceState(null, "");
-      this.load();
+      await this.load();
     });
 
     Utils.formatFromAttribute(this.els.link, "title", f => {

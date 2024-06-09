@@ -9,6 +9,7 @@ async function build() {
 
   for (const lib of [
     "node_modules/markupchisel/dist/markupchisel.lite.bundle.esm.js",
+    "node_modules/markupchisel/gen/test-document.js",
   ]) {
     const dest = `lib/${path.basename(lib)}`;
     await fs.copyFile(lib, `lib/${path.basename(lib)}`);

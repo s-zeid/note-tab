@@ -97,7 +97,7 @@ export function autoResizeTextarea(el, styleEl, styleProp = "height") {
 
 
 export function formatFromAttribute(el, attr, replaceFunction) {
-  let dataAttr = attr + "Format";
+  let dataAttr = attr.replace(/-([a-z])/, (_, $1) => $1.toUpperCase()) + "Format";
   if (!el.dataset[dataAttr]) {
     el.dataset[dataAttr] = el.getAttribute(attr);
   }
