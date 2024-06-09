@@ -11,6 +11,7 @@ clean:
 
 update-markupchisel:
 	npm update markupchisel
+	npm install
 
 
 HOST := s.zeid.me
