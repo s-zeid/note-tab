@@ -47,7 +47,6 @@ const adapter = class MarkupChiselAdapter extends TextInput.Adapter {
           { key: "Alt-i", run: commands.selectParentSyntax, },
           { key: "Mod-\\", run: commands.selectParentSyntax, },
         ])),
-        view.placeholder(this.placeholderElement),
         view.ViewPlugin.fromClass(class {
           constructor(view) {
             this.view = view;
@@ -110,7 +109,6 @@ const adapter = class MarkupChiselAdapter extends TextInput.Adapter {
     } else {
       [start, end, direction] = [anchor, head, (anchor == head) ? "none" : "forward"];
     }
-    console.log(direction);
     return [start, end, direction, this.markupChisel.state.sliceDoc(start, end)];
   }
 
