@@ -279,6 +279,12 @@ class App {
       this.save();
       this.els.title.field.focus();
     }
+
+    setTimeout(async () => {
+      const { MarkupChiselAdapter } = await import("./markupchisel-adapter.js");
+      this.markupChiselAdapter = new MarkupChiselAdapter(this.els.body.field);
+      this.els.body.field.adapter = this.markupChiselAdapter;
+    }, 0);
   }
 }
 

@@ -23,6 +23,8 @@ Features
 * Perfect for use with [Tree Style Tab](https://addons.mozilla.org/firefox/addon/tree-style-tab/)!
 * Each note is a separate tab/window.
 * Each note can have a title and body text.
+* [GitHub Flavored Markdown (GFM)](https://github.github.com/gfm/)
+  highlighting is supported.
 * Each note is stored in the tab's location bar when saved.
 * Each note is stored in the tab's history state as you edit it.
   This allows unsaved notes to be restored when you restart your browser.

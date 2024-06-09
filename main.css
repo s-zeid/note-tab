@@ -77,7 +77,7 @@ a:hover {
 ::-webkit-scrollbar-thumb {
   --scrollbar-tint: rgba(255, 255, 255, 0.375);
   background: linear-gradient(var(--scrollbar-tint), var(--scrollbar-tint)),
-                          var(--color-inactive);
+                              var(--color-inactive);
   opacity: 0.4;
 }
 @media (prefers-color-scheme: dark) {
@@ -125,12 +125,16 @@ fieldset {
   border-bottom: 2px solid var(--color-inactive);
   transition: border-bottom 0.125s linear;
   background: inherit; color: inherit; font: inherit;
+  --markupchisel-font-family: inherit;
+  --markupchisel-font-family-monospace: monospace;
 }
 #title > input:focus, #body > note-tab-textinput:focus-within {
   border-bottom-color: var(--color-active);
   outline: none;
 }
-#title > input::placeholder, #body > note-tab-textinput::placeholder {
+#title > input::placeholder,
+#body > note-tab-textinput ::placeholder,
+#body > note-tab-textinput::part(placeholder) {
   color: var(--color-inactive); opacity: 1;
 }
 
@@ -139,14 +143,14 @@ fieldset {
 }
 #body > note-tab-textinput {
   max-height: calc(100% - 2px);
-  line-height: inherit;
+  line-height: 1.375;
   resize: none;
 }
-#body > note-tab-textinput > * {
+#body > note-tab-textinput::part(input) {
   width: calc(100% - 2px); padding: 0; padding-inline-end: 2px;
   scrollbar-width: thin;
 }
-#body > note-tab-textinput > *::-webkit-scrollbar {
+#body > note-tab-textinput::part(input) > *::-webkit-scrollbar {
   width: 6px;
 }
 @supports (color: -webkit-link) {

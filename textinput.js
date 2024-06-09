@@ -7,25 +7,34 @@ const element = class NTTextInputElement extends HTMLElement {
   static NAME = "note-tab-textinput";
 
   static CSS = `
-    ${this.NAME}:where(:not([hidden])) {
-      display: block; height: var(--base-height); overflow: auto; resize: auto;
+    :host(:where(:not([hidden]))) {
+      display: block; position: relative; height: var(--base-height);
+      overflow: auto; resize: auto;
       background: Field; color: FieldText; font: medium system-ui;
       --base-height: calc(var(--computed-line-height, 1.2) * var(--rows, -1) + 1px);
     }
-    ${this.NAME}:where([flex]) {
+    :host(:where([flex])) {
       min-height: var(--base-height);
       height: var(--flex-height, auto);
     }
-    ${this.NAME}:where(:not([hidden]):focus-within) {
+    :host(:where(:not([hidden])):focus-within) {
       outline: 2px solid SelectedItem;
     }
-    ${this.NAME} > * {
-      display: block; width: 100%; height: 100%; margin: 0; padding: 0;
+    main, :host::part(input) {
+      display: block; width: 100%; height: 100%; min-height: var(--base-height);
+      margin: 0; padding: 0; border: none; resize: none;
       background: transparent; color: inherit; font: inherit; line-height: inherit;
-      border: none; resize: none;
     }
-    ${this.NAME} > *:focus {
+    main > *:focus {
       outline: none;
+    }
+    [part="placeholder"]:not([hidden]) {
+      display: inline-block; position: absolute; z-index: -1; margin: 0; padding: 0;
+      width: 100%; height: 100%; min-height: var(--base-height);
+      border: none; font: inherit; pointer-events: none; resize: none;
+    }
+    [part="placeholder"]:not([hidden]), [part="placeholder"]::placeholder {
+      color: inherit; opacity: 1;
     }
   `;
 
@@ -37,28 +46,57 @@ const element = class NTTextInputElement extends HTMLElement {
     super();
     this.privateStyleProps = this.#setupPrivateStyleProps();
 
-    const initialValue = this.innerHTML;
-    this.replaceChildren();
-    this.adapter = new TextAreaAdapter(this);
+    this.styleSheets = new Map();
+    this.styleSheets.set("private", this.privateStyleProps.parentRule.parentStyleSheet),
+    this.styleSheets.set("main", new this.ownerDocument.defaultView.CSSStyleSheet()),
+    this.styleSheets.set("adapter", new this.ownerDocument.defaultView.CSSStyleSheet()),
 
+    this.styleSheets.get("main").replaceSync(this.constructor.CSS);
+    this.reorderStyleSheets();
+
+    this.container = this.ownerDocument.createElement("main");
+    this.container.part = "container";
+    this.shadowRoot.replaceChildren(this.container);
+
+    this.placeholderElement = this.ownerDocument.createElement("textarea");
+    this.placeholderElement.part = "placeholder";
+    this.placeholderElement.setAttribute("role", "presentation");
+    this.placeholderElement.setAttribute("aria-hidden", "true");
+    this.placeholderElement.readOnly = true;
+    this.placeholderElement.tabIndex = -1;
+    this.shadowRoot.prepend(this.placeholderElement);
+
+    this.adapter = new TextAreaAdapter(this);
+    const initialValue = this.innerHTML;
     if (initialValue) {
       this.adapter.value = initialValue;
+    }
+
+    this._inputListener = (event) => {
+      this.updatePlaceholderVisibility();
+    };
+  }
+
+  reorderStyleSheets() {
+    for (const [name, styleSheet] of this.styleSheets.entries()) {
+      styleSheet._name ??= name;
+      while (this.shadowRoot.adoptedStyleSheets.includes(styleSheet)) {
+        const i = this.shadowRoot.adoptedStyleSheets.indexOf(styleSheet);
+        this.shadowRoot.adoptedStyleSheets.splice(i, 1);
+      }
+      this.shadowRoot.adoptedStyleSheets.push(styleSheet);
     }
   }
 
   connectedCallback() {
-    if (!this.ownerDocument.querySelector(`style[id="${CSS.escape(this.NAME)}"]`)) {
-      const style = this.ownerDocument.createElement("style");
-      style.id = this.constructor.NAME;
-      style.textContent = this.constructor.CSS;
-      this.ownerDocument.head.append(style);
-    }
     Utils.setComputedLineHeight(this, { style: this.privateStyleProps });
+    this.addEventListener("input", this._inputListener);
     this.adapter.connectedCallback();
   }
 
   disconnectedCallback() {
     this.adapter.disconnectedCallback();
+    this.removeEventListener("input", this._inputListener);
   }
 
   static observedAttributes = "flex,placeholder,rows".split(",");
@@ -75,15 +113,29 @@ const element = class NTTextInputElement extends HTMLElement {
   }
 
   set adapter(value) {
+    let focus = false;
+    let selection = null;
     if (this.#adapter) {
       value.value = this.#adapter.value;
+      focus = this.#adapter.focusElement === this.shadowRoot.activeElement;
+      selection = this.getSelectedCharacterRange();
     }
     const oldAdapter = this.#adapter;
     this.#adapter = value;
-    this.replaceChildren(this.#adapter.element);
+    this.styleSheets.get("adapter").replaceSync(this.#adapter.constructor.CSS || "");
+    this.container.replaceChildren(this.#adapter.element);
+    this.adapter.element.part = "input";
+    oldAdapter?.element.removeAttribute("part");
     oldAdapter?.disconnectedCallback();
-    if (this.parentElement) {
+    if (oldAdapter && this.parentElement) {
       this.adapter.connectedCallback();
+    }
+    if (selection) {
+      const [start, end, direction] = selection;
+      this.setSelectedCharacterRange(start, end, direction);
+    }
+    if (focus) {
+      this.focus();
     }
   }
 
@@ -92,6 +144,7 @@ const element = class NTTextInputElement extends HTMLElement {
   }
 
   set value(value) {
+    this.updatePlaceholderVisibility(value);
     this.adapter.value = value;
   }
 
@@ -104,12 +157,11 @@ const element = class NTTextInputElement extends HTMLElement {
   }
 
   get placeholder() {
-    return this.adapter.placeholder;
+    return this.placeholderElement.placeholder;
   }
 
   set placeholder(value) {
-    this.adapter.placeholder = value;
-    this.setAttribute("placeholder", value);
+    this.placeholderElement.placeholder = value;
   }
 
   get rows() {
@@ -134,11 +186,24 @@ const element = class NTTextInputElement extends HTMLElement {
   }
 
   blur() {
-    this.adapter.element.blur();
+    this.adapter.focusElement.blur();
   }
 
   focus() {
-    this.adapter.element.focus();
+    this.adapter.focusElement.focus();
+  }
+
+  getSelectedCharacterRange() {
+    return this.adapter.getSelectedCharacterRange();
+  }
+
+  setSelectedCharacterRange(start, end, direction, text) {
+    return this.adapter.setSelectedCharacterRange(start, end, direction, text);
+  }
+
+  updatePlaceholderVisibility(value) {
+    value ??= this.value;
+    this.placeholderElement.hidden = (value || "").length != 0;
   }
 
   #adapter = null;
@@ -166,12 +231,24 @@ const element = class NTTextInputElement extends HTMLElement {
 
 
 export class Adapter {
+  static CSS = ``;
+
   element = null;
+  parent = null;
+
+  #focusElement = null;
+  get focusElement() {
+    return this.#focusElement || this.element;
+  }
+  set focusElement(value) {
+    this.#focusElement = (value === this.element) ? null : value;
+  }
 
   constructor(parent) {
     if (this.constructor === Adapter) {
       throw new NotImplementedError("this is an abstract class");
     }
+    this.parent = parent;
   }
 
   connectedCallback() {}
@@ -185,11 +262,11 @@ export class Adapter {
     throw new NotImplementedError();
   }
 
-  get placeholder() {
+  getSelectedCharacterRange() {
     throw new NotImplementedError();
   }
 
-  set placeholder(value) {
+  setSelectedCharacterRange(start, end, direction, text) {
     throw new NotImplementedError();
   }
 }
@@ -206,7 +283,7 @@ export class TextAreaAdapter extends Adapter {
       setTimeout(() => {
         this._autoResizeCleanup = Utils.autoResizeTextarea(
           this.element,
-          () => ({ style: this.element.parentElement.privateStyleProps }),
+          () => ({ style: this.parent.privateStyleProps }),
           "--flex-height",
         ).cleanup;
       }, 0);
@@ -215,6 +292,7 @@ export class TextAreaAdapter extends Adapter {
 
   disconnectedCallback() {
     this._autoResizeCleanup();
+    delete this._autoResizeCleanup;
   }
 
   get value() {
@@ -226,12 +304,31 @@ export class TextAreaAdapter extends Adapter {
     this.element.dispatchEvent(new CustomEvent("x-autoresize-update"));
   }
 
-  get placeholder() {
-    return this.element.placeholder;
+  getSelectedCharacterRange() {
+    const start = this.element.selectionStart;
+    const end = this.element.selectionEnd;
+    const direction = this.element.selectionDirection;
+    return [start, end, direction, this.value.substring(start, end)];
   }
 
-  set placeholder(value) {
-    this.element.placeholder = value;
+  setSelectedCharacterRange(start, end, direction, text) {
+    if (text != null) {
+      const prefix = this.value.substring(0, start);
+      const suffix = this.value.substring(end);
+      this.value = prefix + text + suffix;
+      end = start + text.length;
+    }
+    const activeElement = document.activeElement;
+    try {
+      this.element.focus();
+      this.element.setSelectionRange(start, end, direction);
+    } finally {
+      if (activeElement) {
+        activeElement.focus();
+      } else {
+        this.element.blur();
+      }
+    }
   }
 }
 

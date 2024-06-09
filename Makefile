@@ -1,10 +1,16 @@
-all: index.html
+all: build
 
 .PHONY: clean deploy
 
 
+build: index.html
+	npm install
+
 clean:
-	rm -f note-tab.wbn
+	rm -rf lib node_modules package-lock.json
+
+update-markupchisel:
+	npm update markupchisel
 
 
 HOST := s.zeid.me
