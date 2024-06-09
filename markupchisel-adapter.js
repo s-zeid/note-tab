@@ -28,9 +28,6 @@ const adapter = class MarkupChiselAdapter extends TextInput.Adapter {
     .cm-editor .cm-scroller {
       line-height: inherit;
     }
-    .cm-editor .tok-monospace {
-      line-height: calc(var(--computed-line-height) * var(--markupchisel-font-size-factor-monospace) - 2px);
-    }
   `;
 
   constructor(parent) {
