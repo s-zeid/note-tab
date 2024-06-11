@@ -82,6 +82,7 @@ const adapter = class MarkupChiselAdapter extends TextInput.Adapter {
 
     this.element = this.markupChisel.dom;
     this.focusElement = this.markupChisel.contentDOM;
+    this.scrollElement = this.markupChisel.scrollDOM;
   }
 
   connectedCallback() {}

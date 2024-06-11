@@ -125,12 +125,11 @@ const element = class NTTextInputElement extends HTMLElement {
     this.#adapter = value;
     this.styleSheets.get("adapter").replaceSync(this.#adapter.constructor.CSS || "");
     this.container.replaceChildren(this.#adapter.element);
-    this.adapter.element.part = "input";
-    oldAdapter?.element.removeAttribute("part");
     oldAdapter?.disconnectedCallback();
     if (oldAdapter && this.parentElement) {
       this.adapter.connectedCallback();
     }
+    this.reorderStyleSheets();
     if (selection) {
       const [start, end, direction] = selection;
       this.setSelectedCharacterRange(start, end, direction);
@@ -238,15 +237,46 @@ const element = class NTTextInputElement extends HTMLElement {
 export class Adapter {
   static CSS = ``;
 
-  element = null;
   parent = null;
+
+  #element = null;
+  get element() {
+    return this.#element;
+  }
+  set element(value) {
+    this.#element = value;
+    this._updateParts();
+  }
 
   #focusElement = null;
   get focusElement() {
     return this.#focusElement || this.element;
   }
   set focusElement(value) {
-    this.#focusElement = (value === this.element) ? null : value;
+    this.#focusElement = (value === this.element || value == this.scrollElement) ? null : value;
+    this._updateParts();
+  }
+
+  #scrollElement = null;
+  get scrollElement() {
+    return this.#scrollElement || this.element;
+  }
+  set scrollElement(value) {
+    this.#scrollElement = (value === this.element || value == this.focusElement) ? null : value;
+    this._updateParts();
+  }
+
+  _updateParts() {
+    for (const el of [this.#element, this.#focusElement, this.#scrollElement]) {
+      if (el?.part) {
+        el.part.value = "";
+      }
+    }
+    this.#element?.part.toggle("input", true);
+    this.#element?.part.toggle("focus", this.focusElement == this.element);
+    this.#element?.part.toggle("scroll", this.scrollElement == this.element);
+    this.#focusElement?.part.toggle("focus", this.focusElement != this.element);
+    this.#scrollElement?.part.toggle("scroll", this.scrollElement != this.element);
   }
 
   constructor(parent) {

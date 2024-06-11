@@ -146,11 +146,11 @@ fieldset {
   line-height: 1.375;
   resize: none;
 }
-#body > note-tab-textinput::part(input) {
+#body > note-tab-textinput::part(scroll) {
   width: calc(100% - 2px); padding: 0; padding-inline-end: 2px;
   scrollbar-width: thin;
 }
-#body > note-tab-textinput::part(input) > *::-webkit-scrollbar {
+#body > note-tab-textinput::part(scroll) > *::-webkit-scrollbar {
   width: 6px;
 }
 @supports (color: -webkit-link) {
