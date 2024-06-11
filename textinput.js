@@ -78,14 +78,22 @@ const element = class NTTextInputElement extends HTMLElement {
   }
 
   reorderStyleSheets() {
+    const newList = [];
+    const ourValues = Array.from(this.styleSheets.values());
+    for (const styleSheet of this.shadowRoot.adoptedStyleSheets) {
+      if (!ourValues.includes(styleSheet)) {
+        newList.push(styleSheet);
+      }
+    }
     for (const [name, styleSheet] of this.styleSheets.entries()) {
       styleSheet._name ??= name;
-      while (this.shadowRoot.adoptedStyleSheets.includes(styleSheet)) {
-        const i = this.shadowRoot.adoptedStyleSheets.indexOf(styleSheet);
-        this.shadowRoot.adoptedStyleSheets.splice(i, 1);
-      }
-      this.shadowRoot.adoptedStyleSheets.push(styleSheet);
+      newList.push(styleSheet);
     }
+    this.shadowRoot.adoptedStyleSheets.splice(
+      0,
+      this.shadowRoot.adoptedStyleSheets.length,
+      ...newList,
+    );
   }
 
   connectedCallback() {
