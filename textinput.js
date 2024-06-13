@@ -262,7 +262,7 @@ export class Adapter {
 
   #focusElement = null;
   get focusElement() {
-    return this.#focusElement || this.element;
+    return this.#focusElement || this.#scrollElement || this.element;
   }
   set focusElement(value) {
     this.#focusElement = (value === this.element || value == this.scrollElement) ? null : value;
@@ -271,7 +271,7 @@ export class Adapter {
 
   #scrollElement = null;
   get scrollElement() {
-    return this.#scrollElement || this.element;
+    return this.#scrollElement || this.#focusElement || this.element;
   }
   set scrollElement(value) {
     this.#scrollElement = (value === this.element || value == this.focusElement) ? null : value;
@@ -284,11 +284,9 @@ export class Adapter {
         el.part.value = "";
       }
     }
-    this.#element?.part.toggle("input", true);
-    this.#element?.part.toggle("focus", this.focusElement == this.element);
-    this.#element?.part.toggle("scroll", this.scrollElement == this.element);
-    this.#focusElement?.part.toggle("focus", this.focusElement != this.element);
-    this.#scrollElement?.part.toggle("scroll", this.scrollElement != this.element);
+    this.element?.part.toggle("input", true);
+    this.focusElement?.part.toggle("focus", true);
+    this.scrollElement?.part.toggle("scroll", true);
   }
 
   constructor(parent) {
