@@ -73,7 +73,7 @@ const element = class NTTextInputElement extends HTMLElement {
     }
 
     this._inputListener = (event) => {
-      this.updatePlaceholderVisibility();
+      this._updatePlaceholderVisibility();
     };
   }
 
@@ -156,7 +156,7 @@ const element = class NTTextInputElement extends HTMLElement {
   }
 
   set value(value) {
-    this.updatePlaceholderVisibility(value);
+    this._updatePlaceholderVisibility(value);
     this.adapter.value = value;
   }
 
@@ -217,7 +217,7 @@ const element = class NTTextInputElement extends HTMLElement {
     return this.adapter.clearHistory();
   }
 
-  updatePlaceholderVisibility(value) {
+  _updatePlaceholderVisibility(value) {
     value ??= this.value;
     this.placeholderElement.hidden = (value || "").length != 0;
   }
