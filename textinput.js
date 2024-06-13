@@ -370,12 +370,16 @@ export class TextAreaAdapter extends Adapter {
       end = start + text.length;
     }
     const activeElement = document.activeElement;
+    const activeShadowElement = activeElement?.shadowRoot?.activeElement;
     try {
       this.element.focus();
       this.element.setSelectionRange(start, end, direction);
     } finally {
       if (activeElement) {
         activeElement.focus();
+        if (activeShadowElement) {
+          activeShadowElement.focus();
+        }
       } else {
         this.element.blur();
       }
