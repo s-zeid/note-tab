@@ -92,6 +92,10 @@ const element = class NTTextInputElement extends HTMLElement {
     this.shadowRoot.adoptedStyleSheets.splice(
       0,
       this.shadowRoot.adoptedStyleSheets.length,
+    );
+    this.shadowRoot.adoptedStyleSheets.splice(
+      0,
+      this.shadowRoot.adoptedStyleSheets.length,
       ...newList,
     );
   }
