@@ -25,7 +25,7 @@ const adapter = class MarkupChiselAdapter extends TextInput.Adapter {
       padding: 0;
     }
     .cm-editor .cm-content {
-      padding-block-end: 0.125em;
+      padding-block-end: 0.0625em;
     }
     .cm-editor .cm-scroller {
       line-height: inherit;

@@ -11,7 +11,7 @@ const element = class NTTextInputElement extends HTMLElement {
       display: block; position: relative; height: var(--base-height);
       overflow: auto; resize: auto;
       background: Field; color: FieldText; font: medium system-ui;
-      --base-height: calc(var(--computed-line-height, 1.2) * var(--rows, -1) + 1px);
+      --base-height: calc(var(--computed-line-height, 1.2) * var(--rows, -1));
     }
     :host(:where([flex])) {
       min-height: var(--base-height);
