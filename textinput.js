@@ -6,7 +6,7 @@ export { element as NTTextInputElement };
 const element = class NTTextInputElement extends HTMLElement {
   static NAME = "note-tab-textinput";
 
-  static CSS = `
+  static CSS = /* css */ `
     :host(:where(:not([hidden]))) {
       display: block; position: relative; height: var(--base-height);
       overflow: auto; resize: auto;

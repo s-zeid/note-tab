@@ -1,6 +1,8 @@
 import * as MarkupChisel from "./lib/markupchisel.lite.bundle.esm.js";
+export { MarkupChisel };
 
-const { codemirror, lezer } = MarkupChisel.imports;
+export const imports = MarkupChisel.imports;
+const { codemirror, lezer } = imports;
 const commands = codemirror.commands;
 const state = codemirror.state;
 const { Prec } = state;
@@ -12,7 +14,7 @@ import * as TextInput from "./textinput.js";
 export { adapter as default };
 export { adapter as MarkupChiselAdapter };
 const adapter = class MarkupChiselAdapter extends TextInput.Adapter {
-  static CSS = `
+  static CSS = /* css */ `
     .cm-editor.cm-focused {
       outline: none;
     }

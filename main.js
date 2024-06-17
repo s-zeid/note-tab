@@ -1,6 +1,6 @@
 import EmojiFavicon from "./emoji-favicon.js";
+import * as TextInput from "./textinput.js";
 import * as Utils from "./utils.js";
-import * as NTTextInput from "./textinput.js";
 
 
 class App {
@@ -336,17 +336,22 @@ class App {
       this.els.title.field.focus();
     }
 
+    this.textInput = this.els.body.field;
+    this.textAreaAdapter = this.textInput.adapter;
     setTimeout(async () => {
-      const { MarkupChiselAdapter } = await import("./markupchisel-adapter.js");
-      this.markupChiselAdapter = new MarkupChiselAdapter(this.els.body.field);
-      this.els.body.field.adapter = this.markupChiselAdapter;
+      const module = await import("./markupchisel-adapter.js");
+      this.markupChiselAdapter = new module.MarkupChiselAdapter(this.els.body.field);
+      this.textInput.adapter = this.markupChiselAdapter;
+      window.MarkupChisel = module.MarkupChisel;
+      window.codemirror = module.imports.codemirror;
+      window.lezer = module.imports.lezer;
     }, 0);
   }
 }
 
 
 window.EmojiFavicon = EmojiFavicon;
-window.NTTextInput = NTTextInput;
+window.TextInput = TextInput;
 window.Utils = Utils;
 window.app = new App(document.querySelector("main"));
 window.addEventListener("DOMContentLoaded", () => app.main());
