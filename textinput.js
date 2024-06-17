@@ -134,10 +134,11 @@ const element = class NTTextInputElement extends HTMLElement {
       selection = this.getSelectedCharacterRange();
     }
     const oldAdapter = this.#adapter;
-    this.#adapter = value;
-    this.styleSheets.get("adapter").replaceSync(this.#adapter.constructor.CSS || "");
-    this.container.replaceChildren(this.#adapter.element);
+    this.container.replaceChildren();
     oldAdapter?.disconnectedCallback();
+    this.styleSheets.get("adapter").replaceSync(value.constructor.CSS || "");
+    this.#adapter = value;
+    this.container.replaceChildren(this.#adapter.element);
     if (oldAdapter && this.parentElement) {
       this.adapter.connectedCallback();
     }
