@@ -38,14 +38,17 @@ const adapter = class MarkupChiselAdapter extends TextInput.Adapter {
     this.markupChisel = new MarkupChisel.MarkupChiselView({
       root: parent.shadowRoot || parent.ownerDocument,
       extensions: [
+        // Ensure Mod-Enter gets handled by the application
         Prec.highest(view.keymap.of([
           { key: "Mod-Enter", run: view => true, },
         ])),
+        // Insert tab stop on Mod-i; remap selectParentSyntax
         Prec.high(view.keymap.of([
           { key: "Mod-i", run: commands.insertTab, },
           { key: "Alt-i", run: commands.selectParentSyntax, },
           { key: "Mod-\\", run: commands.selectParentSyntax, },
         ])),
+        // Dispatch input event when the user changes the document
         view.ViewPlugin.fromClass(class {
           constructor(view) {
             this.view = view;
@@ -80,6 +83,8 @@ const adapter = class MarkupChiselAdapter extends TextInput.Adapter {
           }
         }),
       ],
+    }, {
+      interactive: true,
     });
 
     this.element = this.markupChisel.dom;
