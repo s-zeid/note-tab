@@ -6,7 +6,14 @@ import * as Utils from "./utils.js";
 class App {
   get MAGIC() { return "46e56985-cff3-45fd-b1b7-c5f84fbb921c"; }
 
-  get KNOWN_EXTENSIONS() { return [".md", ".txt"]; }  
+  get KNOWN_EXTENSIONS() { return {
+    ".md": {
+      mime: "text/markdown",
+    },
+    ".txt": {
+      mime: "text/plain",
+    },
+  }; }
   get DEFAULT_EXTENSION() { return ".md"; }
   get DEFAULT_TYPE_NAME() { return "note"; }
 
@@ -165,7 +172,7 @@ class App {
         let filenameParts = file.name.split(".");
         typeExtension = "." + filenameParts[filenameParts.length - 1].toLowerCase();
       }
-      if (!this.KNOWN_EXTENSIONS.includes(typeExtension)) {
+      if (!Object.hasOwn(this.KNOWN_EXTENSIONS, typeExtension)) {
         typeExtension = "";
       }
       if (typeName) {
@@ -202,18 +209,19 @@ class App {
     let titleContents = "";
     if (this.els.title.field.value) {
       title = this.els.title.field.value;
-      let separator = "=".repeat(Math.min(title.length, 76));
+      const separator = "=".repeat(Math.min(title.length, 76));
       titleContents = `${title}\n${separator}\n\n`;
     } else {
       title = this.els.title.field.placeholder;
     }
-    let contents = `${titleContents}${this.els.body.field.value}\n`;
+    const contents = `${titleContents}${this.els.body.field.value}\n`;
+    const mime = this.KNOWN_EXTENSIONS[this.typeExtension]?.mime || "text/plain";
 
-    let url = URL.createObjectURL(new Blob(
-      [contents], {type: "text/plain; charset=utf-8"}
+    const url = URL.createObjectURL(new Blob(
+      [contents], {type: `${mime}; charset=utf-8`}
     ));
 
-    let a = document.createElement("a");
+    const a = document.createElement("a");
     a.href = url;
     a.download = `${title}.${this.els.type.field.value}`.replace("/", "\u2044");
     a.style.display = "none";
