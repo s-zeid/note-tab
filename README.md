@@ -2,7 +2,7 @@ Note Tab
 ========
 
 A simple ES6 webapp to write a note in a tab.  
-<https://note-tab.bnay.me/>  
+<https://b4r.app/note-tab/>  
 <https://code.s.zeid.me/note-tab>
 
 *                        *                        *                        *
@@ -43,7 +43,7 @@ Usage
 A recent version of a modern web browser is required.
 [Firefox](https://www.mozilla.org/firefox/) is recommended.
 
-Simply go to <https://note-tab.bnay.me/>.  To save a note to the location bar,
+Simply go to <https://b4r.app/note-tab/>.  To save a note to the location bar,
 either click on `#` at the top-right or press Ctrl+Enter/Command+Enter.  (If
 the note's title is focused, you can simply press Enter.)
 

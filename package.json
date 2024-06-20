@@ -2,7 +2,7 @@
   "name": "note-tab",
   "version": "0.1.0",
   "description": "A simple ES6 webapp to write a note in a tab.",
-  "homepage": "https://note-tab.bnay.me/",
+  "homepage": "https://b4r.app/note-tab/",
   "repository": {
     "type": "git",
     "url": "https://code.s.zeid.me/note-tab.git"

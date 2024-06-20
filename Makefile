@@ -15,7 +15,7 @@ update-markupchisel:
 
 
 HOST := s.zeid.me
-DIR  := ~/srv/www/bnay.me/srv/_/note-tab
+DIR  := ~/srv/www/b4r.app/srv/note-tab
 
 deploy:
 	ssh $(HOST) 'cd $(DIR); pwd; git pull && git submodule update && make'
