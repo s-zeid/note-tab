@@ -6,18 +6,31 @@ import * as Utils from "./utils.js";
 class App {
   get MAGIC() { return "46e56985-cff3-45fd-b1b7-c5f84fbb921c"; }
 
-  get KNOWN_EXTENSIONS() { return {
+  get EXTENSION_INFO() { return {
     ".md": {
       mime: "text/markdown",
+      name: "Markdown",
     },
     ".txt": {
       mime: "text/plain",
     },
     ".asc": {
       mime: "text/x-ascii",
+      name: "plain-text",
+      types: {
+        art: {
+          name: "ASCII",
+        },
+      },
     },
     ".ascii": {
       mime: "text/x-ascii",
+      name: "plain-text",
+      types: {
+        art: {
+          name: "ASCII",
+        },
+      },
     },
   }; }
   get DEFAULT_EXTENSION() { return ".md"; }
@@ -75,6 +88,11 @@ class App {
     return this.type.match(/\.[^.]*$/)?.[0] || "";
   }
 
+  get typeExtensionName() {
+    const extInfo = this.EXTENSION_INFO[this.typeExtension];
+    return extInfo?.types?.[this.typeName]?.name || extInfo?.name || "";
+  }
+
   async load() {
     let historyState = window.history.state || {
       hash: window.location.hash,
@@ -113,7 +131,9 @@ class App {
       f = f.replace("{1}", type);
       return f;
     });
-    Utils.formatFromAttribute(this.els.new_, "title", f => f.replace("{0}", typeName));
+    Utils.formatFromAttribute(this.els.new_, "title", f => {
+      return f.replace("{0}", `${this.typeExtensionName} ${typeName}`.trim());
+    });
     Utils.formatFromAttribute(this.els.title.field, "placeholder", f => f.replace("{0}", typeName));
 
     this.els.title.field.value = params.get("title") || "";
@@ -191,7 +211,7 @@ class App {
         let filenameParts = file.name.split(".");
         typeExtension = "." + filenameParts[filenameParts.length - 1].toLowerCase();
       }
-      if (!Object.hasOwn(this.KNOWN_EXTENSIONS, typeExtension)) {
+      if (!Object.hasOwn(this.EXTENSION_INFO, typeExtension)) {
         typeExtension = "";
       }
       if (typeName) {
@@ -234,7 +254,7 @@ class App {
       title = this.els.title.field.placeholder;
     }
     const contents = `${titleContents}${this.els.body.field.value}\n`;
-    const mime = this.KNOWN_EXTENSIONS[this.typeExtension]?.mime || "text/plain";
+    const mime = this.EXTENSION_INFO[this.typeExtension]?.mime || "text/plain";
 
     const url = URL.createObjectURL(new Blob(
       [contents], {type: `${mime}; charset=utf-8`}
