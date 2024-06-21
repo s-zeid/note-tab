@@ -13,6 +13,12 @@ class App {
     ".txt": {
       mime: "text/plain",
     },
+    ".asc": {
+      mime: "text/x-ascii",
+    },
+    ".ascii": {
+      mime: "text/x-ascii",
+    },
   }; }
   get DEFAULT_EXTENSION() { return ".md"; }
   get DEFAULT_TYPE_NAME() { return "note"; }
@@ -20,6 +26,7 @@ class App {
   constructor(container) {
     this.els = {
       container: container,
+      main: container,
       type: {
         field: container.querySelector("#type"),
       },
@@ -48,12 +55,24 @@ class App {
     this.initialTitle = null;
   }
 
+  get type() {
+    return this.els.type.field.value;
+  }
+  set type(value) {
+    this.els.type.field.value = value;
+    const monospace = [".asc", ".ascii"].includes(this.typeExtension);
+    this.els.main.classList.toggle("monospace", monospace);
+    const highlight = !monospace;
+    this.els.main.classList.toggle("no-highlight", !highlight);
+    this.markupChiselAdapter?.markupChisel.toggles.highlightMarkup.set(highlight);
+  }
+
   get typeName() {
-    return this.els.type.field.value.replace(/\.[^.]*$/, "");
+    return this.type.replace(/\.[^.]*$/, "");
   }
 
   get typeExtension() {
-    return this.els.type.field.value.match(/\.[^.]*$/)?.[0] || "";
+    return this.type.match(/\.[^.]*$/)?.[0] || "";
   }
 
   async load() {
@@ -87,7 +106,7 @@ class App {
       hash = this.makeHash(params);
       this.replaceState(hash, true);
     }
-    this.els.type.field.value = type;
+    this.type = type;
     const typeName = this.typeName;
     Utils.formatFromAttribute(this.els.new_, "href", f => {
       f = f.replace("{0}", this.baseURI);
@@ -196,7 +215,7 @@ class App {
         body = body.substring(0, body.length - 1);
       }
 
-      this.els.type.field.value = type;
+      this.type = type;
       this.els.title.field.value = title;
       this.els.body.field.value = body;
       this.save();
@@ -223,7 +242,7 @@ class App {
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${title}.${this.els.type.field.value}`.replace("/", "\u2044");
+    a.download = `${title}.${this.type}`.replace("/", "\u2044");
     a.style.display = "none";
     this.els.download.parentElement.insertBefore(a, this.els.download);
     a.click();
@@ -350,6 +369,7 @@ class App {
       const module = await import("./markupchisel-adapter.js");
       this.markupChiselAdapter = new module.MarkupChiselAdapter(this.els.body.field);
       this.textInput.adapter = this.markupChiselAdapter;
+      this.type = this.type;
       window.MarkupChisel = module.MarkupChisel;
       window.codemirror = module.imports.codemirror;
       window.lezer = module.imports.lezer;

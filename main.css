@@ -137,6 +137,9 @@ fieldset {
 #body > note-tab-textinput::part(placeholder) {
   color: var(--color-inactive); opacity: 1;
 }
+main.monospace #body > note-tab-textinput {
+  font-family: var(--markupchisel-font-family-monospace);
+}
 
 #body {
   grid-column: span 2;
