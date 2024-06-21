@@ -30,8 +30,8 @@ Features
   This allows unsaved notes to be restored when you restart your browser.
 * Your notes stay on your device
   (unless your browser is set up to synchronize your browsing history).
-* You can customize the "New note" text by changing the `type=` parameter
-  in the URL.
+* You can customize the "New note" text and file extension by changing
+  the `type=` parameter in the URL.
 * You can copy a permalink to a note whether or not it has been saved.
 * Notes can be saved to and loaded from text files.
 * Notes can be printed through your browser's built-in print function.
@@ -55,7 +55,11 @@ File Format
 -----------
 
 A simple plain text format is used for saving and loading notes.
-The file extension used is `.txt`.
+These file extensions may be used:
+
+* `.md`: Markdown (the default file extension)
+* `.txt`: Highlighed as Markdown for backwards compatibility
+* `.asc`: Shown as plain text with a monospace font
 
 The title, if not empty, is saved to the beginning of the file using
 Markdown Setext-style heading syntax, e.g.:
@@ -121,6 +125,12 @@ and (b) in the URL's hash (the part after the `#` symbol) when you save a
 note.  This obviously places your notes at the mercy of your browser's
 privacy practices.  Firefox will also store the individual form fields
 for each tab (but Note Tab does not rely on that behavior).
+
+[The library used to highlight Markdown](https://code.s.zeid.me/markupchisel)
+is licensed under the 0BSD License; however, it makes use of other components
+(mainly [CodeMirror](https://codemirror.net/)) which are licensed under other
+permissive open-source licenses.  See [its LICENSE.txt file
+](https://code.s.zeid.me/markupchisel/blob/main/LICENSE.txt) for details.
 
 **DISCLAIMER**:
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
