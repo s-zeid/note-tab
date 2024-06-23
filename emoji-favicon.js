@@ -30,26 +30,29 @@ class EmojiFavicon {
       element.setAttribute(attributeName, "");
     }
 
-    const args = this.parseAttributeValue(
-      element.getAttribute(attributeName),
-      forceShadowColor,
-    );
-    this.set.apply(this, args.concat([size]));
+    const setFromCurrentAttributeValue = () => {
+      const args = this.parseAttributeValue(
+        element.getAttribute(attributeName),
+        forceShadowColor,
+      );
+      this.set.apply(this, args.concat([size]));
+    };
+    setFromCurrentAttributeValue();
 
-    const emojiFaviconObserver = new MutationObserver(mutations => {
+    const emojiFaviconAttributeObserver = new MutationObserver(mutations => {
       for (const mutation of mutations) {
         if (mutation.attributeName === attributeName) {
-          const args = this.parseAttributeValue(
-            element.getAttribute(attributeName),
-            forceShadowColor,
-          );
-          this.set.apply(this, args.concat([size]));
+          setFromCurrentAttributeValue();
         }
       }
     });
-    emojiFaviconObserver.observe(element, { attributes: true });
+    emojiFaviconAttributeObserver.observe(element, { attributes: true });
 
-    return emojiFaviconObserver;
+    return {
+      cleanup: () => {
+        emojiFaviconAttributeObserver.disconnect();
+      },
+    };
   }
 
   static parseAttributeValue(attributeValue, forceShadowColor) {
