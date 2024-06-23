@@ -285,6 +285,7 @@ class App {
       title = this.els.title.field.value;
       let separator = title;
       if (Utils.isRGIEmojiPropertySupported()) {
+        separator = separator.replace(new RegExp("\\s*\\p{RGI_Emoji}$", "v"), "");
         separator = separator.replace(new RegExp("\\p{RGI_Emoji}", "vg"), "==");
       }
       separator = "=".repeat(Math.min(separator.length, 76));
