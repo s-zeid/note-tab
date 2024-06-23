@@ -112,6 +112,14 @@ export function formatFromAttribute(el, attr, replaceFunction) {
   return result;
 }
 
+export function isRGIEmojiPropertySupported() {
+  try {
+    return Boolean(new RegExp("^(\\p{RGI_Emoji})", "v").exec("🐱"));
+  } catch (error) {
+    return false;
+  }
+}
+
 export function setComputedLineHeight(el, styleEl) {
   function resolveStyleEl() {
     return ((typeof styleEl == "function") ? styleEl(el) : styleEl) || el;

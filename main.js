@@ -162,6 +162,7 @@ class App {
     let hash = this.makeHash();
     this.els.link.href = hash;
     this.setDocumentTitle();
+    this.setEmojiFavicon();
 
     if (doState) {
       this.replaceState(hash);
@@ -170,12 +171,40 @@ class App {
 
   setDocumentTitle() {
     let title = this.els.title.field.value || this.els.title.field.placeholder;
+    const emoji = this.getLeadingOrTrailingEmoji(title);
+    if (emoji) {
+      if (title.startsWith(emoji)) {
+        title = title.substring(emoji.length).trimStart();
+      } else if (title.endsWith(emoji)) {
+        title = title.substring(0, title.length - emoji.length).trimEnd();
+      }
+    }
     if (this.state.saved === false) {
       title = "* " + title;
     }
     if (document.title != title) {
       document.title = title;
     }
+  }
+
+  setEmojiFavicon() {
+    const title = this.els.title.field.value || this.els.title.field.placeholder;
+    const emoji = this.getLeadingOrTrailingEmoji(title);
+    if (
+      emoji &&
+      !document.documentElement.dataset.emojiFavicon.startsWith(`${emoji} `)
+    ) {
+      const params = this.initialEmojiFavicon.split(" ", 2);
+      document.documentElement.dataset.emojiFavicon = `${emoji} ${params[1]}`;
+    } else if (!emoji) {
+      document.documentElement.dataset.emojiFavicon = this.initialEmojiFavicon;
+    }
+  }
+
+  getLeadingOrTrailingEmoji(s) {
+    if (Utils.isRGIEmojiPropertySupported()) {
+      return new RegExp("(^\\p{RGI_Emoji}|\\p{RGI_Emoji}$)", "v").exec(s)?.[1];
+    };
   }
 
   save(saveHash) {
@@ -321,6 +350,7 @@ class App {
   async main() {
     this.baseURI = window.location.href.replace(/#.*$/, "");
     this.initialTitle = document.title;
+    this.initialEmojiFavicon = document.documentElement.dataset.emojiFavicon;
 
     Utils.formatFromAttribute(this.els.type.field, "data-default", f => {
       f = f.replace("{0}", this.DEFAULT_TYPE_NAME);

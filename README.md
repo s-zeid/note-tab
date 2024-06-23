@@ -25,6 +25,9 @@ Features
 * Each note can have a title and body text.
 * [GitHub Flavored Markdown (GFM)](https://github.github.com/gfm/)
   highlighting is supported.
+* If the note's title starts or ends with an emoji, the emoji will be used
+  as the page's favicon.  (If it both starts and ends with an emoji, the
+  starting emoji will be used.)
 * Each note is stored in the tab's location bar when saved.
 * Each note is stored in the tab's history state as you edit it.
   This allows unsaved notes to be restored when you restart your browser.
