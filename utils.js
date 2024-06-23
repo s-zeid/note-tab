@@ -112,6 +112,14 @@ export function formatFromAttribute(el, attr, replaceFunction) {
   return result;
 }
 
+export function getFirefoxAndroidVersion() {
+  const ua = navigator.userAgent;
+  if (ua.match(/Firefox/) && ua.match(/Android/)) {
+    return Number(ua.match(/Firefox\/([0-9.]+)/)?.[1]) || Infinity;
+  }
+  return NaN;
+}
+
 export function isRGIEmojiPropertySupported() {
   try {
     return Boolean(new RegExp("^(\\p{RGI_Emoji})", "v").exec("🐱"));

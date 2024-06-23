@@ -182,12 +182,18 @@ class App {
     if (this.state.saved === false) {
       title = "* " + title;
     }
+    if (emoji && Utils.getFirefoxAndroidVersion() < Infinity) {
+      title = `${emoji}\u00a0\u00a0${title}`;
+    }
     if (document.title != title) {
       document.title = title;
     }
   }
 
   setEmojiFavicon() {
+    if (Utils.getFirefoxAndroidVersion() < Infinity) {
+      return;
+    }
     const title = this.els.title.field.value || this.els.title.field.placeholder;
     const emoji = this.getLeadingOrTrailingEmoji(title);
     if (
@@ -351,6 +357,7 @@ class App {
     this.baseURI = window.location.href.replace(/#.*$/, "");
     this.initialTitle = document.title;
     this.initialEmojiFavicon = document.documentElement.dataset.emojiFavicon;
+    this.setEmojiFavicon();
 
     Utils.formatFromAttribute(this.els.type.field, "data-default", f => {
       f = f.replace("{0}", this.DEFAULT_TYPE_NAME);
@@ -428,7 +435,6 @@ class App {
 }
 
 
-window.EmojiFavicon = EmojiFavicon;
 window.TextInput = TextInput;
 window.Utils = Utils;
 window.app = new App(document.querySelector("main"));
