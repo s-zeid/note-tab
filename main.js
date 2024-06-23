@@ -283,7 +283,11 @@ class App {
     let titleContents = "";
     if (this.els.title.field.value) {
       title = this.els.title.field.value;
-      const separator = "=".repeat(Math.min(title.length, 76));
+      let separator = title;
+      if (Utils.isRGIEmojiPropertySupported()) {
+        separator = separator.replace(new RegExp("\\p{RGI_Emoji}", "vg"), "==");
+      }
+      separator = "=".repeat(Math.min(separator.length, 76));
       titleContents = `${title}\n${separator}\n\n`;
     } else {
       title = this.els.title.field.placeholder;
