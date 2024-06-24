@@ -1,3 +1,7 @@
+@import "./lib/inter/inter.css";
+@import "./lib/roboto-mono/400.css";
+@import "./lib/roboto-mono/700.css";
+
 /* Base */
 
 /* Eventually, modern browsers will support CSS 4 System Colors
@@ -15,7 +19,12 @@
   --color-foreground: WindowText;
   --color-inactive: GrayText;
   --color-active: Highlight;
-  --font-main: caption;
+  --font-size-main: 0.916rem;
+  --font-size-monospace: inherit;
+  --font-family-main: "Inter", "Roboto", "Noto Sans", system-ui, sans-serif;
+  --font-family-monospace: "Roboto Mono", "Cousine", monospace;
+  --font-feature-settings-main: "tnum" 1, "ss01" 1, "ss04" 1, "calt" 1;
+  --font-feature-settings-monospace: normal;
 }
 
 @supports (color: Field) {
@@ -54,10 +63,17 @@
 :root, input, textarea {
   background: var(--color-background);
   color: var(--color-foreground);
-  font: var(--font-main);
+  font-size: var(--font-size-main);
+  font-family: var(--font-family-main);
+  font-feature-settings: var(--font-feature-settings-main);
 }
 input, textarea {
   background: transparent;
+}
+code, kbd, listing, plaintext, samp, tt, pre, xmp {
+  font-size: var(--font-size-monospace);
+  font-family: var(--font-family-monospace);
+  font-feature-settings: var(--font-feature-settings-monospace);
 }
 a, a:hover, a:visited {
   color: var(--color-active);
@@ -125,8 +141,8 @@ fieldset {
   border-bottom: 2px solid var(--color-inactive);
   transition: border-bottom 0.125s linear;
   background: inherit; color: inherit; font: inherit;
-  --markupchisel-font-family: inherit;
-  --markupchisel-font-family-monospace: monospace;
+  --markupchisel-font-family: var(--font-family-main);
+  --markupchisel-font-family-monospace: var(--font-family-monospace);
 }
 #title > input:focus, #body > note-tab-textinput:focus-within {
   border-bottom-color: var(--color-active);
@@ -138,7 +154,8 @@ fieldset {
   color: var(--color-inactive); opacity: 1;
 }
 main.monospace #body > note-tab-textinput {
-  font-family: var(--markupchisel-font-family-monospace);
+  font-family: var(--font-family-monospace);
+  --markupchisel-font-family: var(--font-family-monospace);
 }
 
 #body {

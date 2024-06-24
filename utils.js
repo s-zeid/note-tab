@@ -41,7 +41,7 @@ export function autoResizeInput(el, styleEl, styleProp = "width") {
     }
 
     const styleElResult = resolveStyleEl();
-    styleElResult.style.setProperty(styleProp, "0px");
+    styleElResult.style.setProperty(styleProp, "0");
 
     let width = el.scrollWidth + window.devicePixelRatio;
     styleElResult.style.setProperty(styleProp, `${width}px`);
@@ -54,14 +54,32 @@ export function autoResizeInput(el, styleEl, styleProp = "width") {
   el.addEventListener("input", listener);
   el.addEventListener("x-autoresize-update", listener);
   window.addEventListener("resize", listener);
+  window.addEventListener("load", listener);
   listener();
+
+  let loadingInterval = setInterval(listener, 50);
+  function loadListener() {
+    window.removeEventListener("load", listener);
+    window.removeEventListener("load", loadListener);
+    if (loadingInterval != null) {
+      clearInterval(loadingInterval);
+      loadingInterval = null;
+    }
+  }
+  window.addEventListener("load", loadListener);
   return {
     listener,
     cleanup: () => {
       el.removeEventListener("input", listener);
       el.removeEventListener("x-autoresize-update", listener);
       window.removeEventListener("resize", listener);
+      window.removeEventListener("load", listener);
+      window.removeEventListener("load", loadListener);
       resolveStyleEl().style.removeProperty(styleProp);
+      if (loadingInterval != null) {
+        clearInterval(loadingInterval);
+        loadingInterval = null;
+      }
     },
   };
 }
@@ -83,14 +101,33 @@ export function autoResizeTextarea(el, styleEl, styleProp = "height") {
   el.addEventListener("input", listener);
   el.addEventListener("x-autoresize-update", listener);
   window.addEventListener("resize", listener);
+  window.addEventListener("load", listener);
   listener();
+
+  let loadingInterval = setInterval(listener, 50);
+  function loadListener() {
+    window.removeEventListener("load", listener);
+    window.removeEventListener("load", loadListener);
+    if (loadingInterval != null) {
+      clearInterval(loadingInterval);
+      loadingInterval = null;
+    }
+  }
+  window.addEventListener("load", loadListener);
+
   return {
     listener,
     cleanup: () => {
       el.removeEventListener("input", listener);
       el.removeEventListener("x-autoresize-update", listener);
       window.removeEventListener("resize", listener);
+      window.removeEventListener("load", listener);
+      window.removeEventListener("load", loadListener);
       resolveStyleEl().style.removeProperty(styleProp);
+      if (loadingInterval != null) {
+        clearInterval(loadingInterval);
+        loadingInterval = null;
+      }
     },
   };
 }

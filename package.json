@@ -16,6 +16,8 @@
   "license": "X11",
   "type": "module",
   "dependencies": {
+    "@fontsource/roboto-mono": "5.0.18",
+    "inter-ui": "4.0.2",
     "markupchisel": "git+https://gitlab.com/s-zeid/markupchisel.git#main"
   }
 }

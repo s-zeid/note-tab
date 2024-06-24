@@ -14,7 +14,7 @@ update-markupchisel:
 	npm install
 
 
-HOST := s.zeid.me
+HOST := b4r.app
 DIR  := ~/srv/www/b4r.app/srv/note-tab
 
 deploy:

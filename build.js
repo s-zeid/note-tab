@@ -10,11 +10,22 @@ async function build() {
   for (const lib of [
     "node_modules/markupchisel/dist/markupchisel.lite.bundle.esm.js",
     "node_modules/markupchisel/gen/test-document.js",
+    "node_modules/@fontsource/roboto-mono",
+    "node_modules/inter-ui:inter",
   ]) {
-    const dest = `lib/${path.basename(lib)}`;
-    await fs.copyFile(lib, `lib/${path.basename(lib)}`);
-    const stat = await fs.stat(lib, { bigint: true });
-    await fs.utimes(dest, Number(stat.atimeNs) / 1e9, Number(stat.mtimeNs) / 1e9);
+    const [libPath, destName] = lib.split(":", 2);
+    const destPath = `lib/${destName || path.basename(libPath)}`;
+    if ((await fs.stat(libPath)).isDirectory()) {
+      await fs.cp(
+        libPath,
+        destPath,
+        { force: true, recursive: true, preserveTimestamps: true },
+      );
+    } else {
+      await fs.copyFile(libPath, destPath);
+      const stat = await fs.stat(libPath, { bigint: true });
+      await fs.utimes(destPath, Number(stat.atimeNs) / 1e9, Number(stat.mtimeNs) / 1e9);
+    }
   }
 }
 
