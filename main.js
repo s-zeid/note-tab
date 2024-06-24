@@ -443,4 +443,8 @@ class App {
 window.TextInput = TextInput;
 window.Utils = Utils;
 window.app = new App(document.querySelector("main"));
-window.addEventListener("DOMContentLoaded", () => app.main());
+if (document.readyState == "loading") {
+  window.addEventListener("DOMContentLoaded", () => app.main());
+} else {
+  app.main();
+}
