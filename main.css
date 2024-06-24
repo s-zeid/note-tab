@@ -153,7 +153,7 @@ fieldset {
 #body > note-tab-textinput::part(placeholder) {
   color: var(--color-inactive); opacity: 1;
 }
-main.monospace #body > note-tab-textinput {
+main.monospace #body > :is(note-tab-textinput, pre) {
   font-family: var(--font-family-monospace);
   --markupchisel-font-family: var(--font-family-monospace);
 }
