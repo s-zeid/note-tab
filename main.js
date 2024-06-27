@@ -20,6 +20,7 @@ class App {
       types: {
         art: {
           name: "ASCII",
+          verbosePlaceholder: true,
         },
       },
     },
@@ -131,10 +132,17 @@ class App {
       f = f.replace("{1}", type);
       return f;
     });
+    const verboseTypeName = `${this.typeExtensionName} ${typeName}`.trim();
     Utils.formatFromAttribute(this.els.new_, "title", f => {
-      return f.replace("{0}", `${this.typeExtensionName} ${typeName}`.trim());
+      return f.replace("{0}", verboseTypeName);
     });
-    Utils.formatFromAttribute(this.els.title.field, "placeholder", f => f.replace("{0}", typeName));
+    Utils.formatFromAttribute(this.els.title.field, "placeholder", f => {
+      return f.replace(
+        "{0}",
+        this.EXTENSION_INFO[this.typeExtension]?.types?.[this.typeName]?.verbosePlaceholder
+          ? verboseTypeName : typeName,
+      );
+    });
 
     this.els.title.field.value = params.get("title") || "";
     this.els.title.field.dispatchEvent(new CustomEvent("x-autoresize-update"));
