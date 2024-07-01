@@ -231,7 +231,13 @@ class App {
     this.replaceState(null, saveHash);
   }
 
-  async open() {
+  async open(dialog = true) {
+    if (dialog) {
+      this.els.file.value = "";
+      this.els.file.showPicker();
+      return;
+    }
+
     if (this.els.file.files.length) {
       let file = this.els.file.files[0];
       let contents = await file.text();
@@ -359,10 +365,21 @@ class App {
     this.update();
   }
 
-  saveOnKeyUp(e) {
-    let isTitle = e.target === this.els.title.field;
-    if ((e.ctrlKey || e.metaKey || isTitle) && e.code.match(/^(Numpad)?(Enter|Return)$/)) {
+  onKeyDown(event) {
+    const mod = event.ctrlKey || event.metaKey;
+    const modOnly = mod && !event.shiftKey && !event.altKey;
+    const isTitle = event.target === this.els.title.field;
+    if ((mod || isTitle) && event.code.match(/^(Numpad)?(Enter|Return)$/)) {
       return this.save();
+    } else if (modOnly && event.code.match(/^KeyO$/)) {
+      event.preventDefault();
+      return this.open();
+    } else if (modOnly && event.code.match(/^KeyS$/)) {
+      event.preventDefault();
+      return this.download();
+    } else if (modOnly && event.code.match(/^KeyN$/)) {
+      event.preventDefault();
+      return this.els.new.click();
     }
   }
 
@@ -397,16 +414,18 @@ class App {
       await this.load();
     });
 
-    Utils.formatFromAttribute(this.els.link, "title", f => {
-      let ua = navigator.userAgent;
-      f = f.replace("{0}", !ua.includes("Mac OS") ? "Ctrl" : "Command");
-      f = f.replace("{1}", !ua.match(/Mobile|Tablet/) ? "right-click" : "long press");
-      return f;
-    });
+    for (const button of [this.els.link, this.els.download, this.els.open]) {
+      Utils.formatPlatformWordsFromAttribute(button, "title", f => {
+        const ua = navigator.userAgent;
+        f = f.replaceAll("{openKey}", ua.includes("Firefox") ? "" : " ({modifier}-O)");
+        f = Utils.formatPlatformWords(f);
+        return f;
+      });
+    }
 
     this.els.title.field.addEventListener("input", e => this.updateOnInput(e));
     this.els.body.field.addEventListener("input", e => this.updateOnInput(e));
-    document.documentElement.addEventListener("keyup", e => this.saveOnKeyUp(e));
+    document.documentElement.addEventListener("keydown", e => this.onKeyDown(e));
 
     this.els.link.addEventListener("click", e => {
       if (!(e.altKey || e.ctrlKey || e.metaKey || e.shiftKey)) {
@@ -418,7 +437,7 @@ class App {
     this.els.download.addEventListener("click", () => this.download());
 
     this.els.file.value = "";
-    this.els.file.addEventListener("change", () => this.open());
+    this.els.file.addEventListener("change", () => this.open(false));
     this.els.open.addEventListener("click", () => this.els.file.click());
 
     this.els.container.style.display = null;

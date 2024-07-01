@@ -134,12 +134,12 @@ export function autoResizeTextarea(el, styleEl, styleProp = "height") {
 
 
 export function formatFromAttribute(el, attr, replaceFunction) {
-  let dataAttr = attr.replace(/-([a-z])/, (_, $1) => $1.toUpperCase()) + "Format";
+  const dataAttr = attr.replace(/-([a-z])/, (_, $1) => $1.toUpperCase()) + "Format";
   if (!el.dataset[dataAttr]) {
     el.dataset[dataAttr] = el.getAttribute(attr);
   }
 
-  let format = el.dataset[dataAttr];
+  const format = el.dataset[dataAttr];
 
   let result = format;
   if (replaceFunction) {
@@ -149,6 +149,21 @@ export function formatFromAttribute(el, attr, replaceFunction) {
   return result;
 }
 
+
+export function formatPlatformWords(f, extraReplaceFunction) {
+  const ua = navigator.userAgent;
+  f = f.replaceAll("{modifier}", !ua.includes("Mac OS") ? "Ctrl" : "Command");
+  f = f.replaceAll("{context}", !ua.match(/Mobile|Tablet/) ? "right-click" : "long press");
+  f = extraReplaceFunction?.(f) ?? f;
+  return f;
+}
+
+
+export function formatPlatformWordsFromAttribute(el, attr, extraReplaceFunction) {
+  return formatFromAttribute(el, attr, f => formatPlatformWords(f, extraReplaceFunction));
+}
+
+
 export function getFirefoxAndroidVersion() {
   const ua = navigator.userAgent;
   if (ua.match(/Firefox/) && ua.match(/Android/)) {
@@ -157,6 +172,7 @@ export function getFirefoxAndroidVersion() {
   return NaN;
 }
 
+
 export function isRGIEmojiPropertySupported() {
   try {
     return Boolean(new RegExp("^(\\p{RGI_Emoji})", "v").exec("🐱"));
@@ -164,6 +180,7 @@ export function isRGIEmojiPropertySupported() {
     return false;
   }
 }
+
 
 export function setComputedLineHeight(el, styleEl) {
   function resolveStyleEl() {
