@@ -217,7 +217,10 @@ class App {
 
   getLeadingOrTrailingEmoji(s) {
     if (Utils.isRGIEmojiPropertySupported()) {
-      return new RegExp("(^\\p{RGI_Emoji}|\\p{RGI_Emoji}$)", "v").exec(s)?.[1];
+      const regionalIndicators = "(?:[\u{1F1E6}-\u{1F1FF}]|\uD83C[\uDDE6-\uDDFF])";
+      const allowedChars = `(?:\\p{RGI_Emoji}|${regionalIndicators}{1,2})`;
+      const leadingOrTrailing = `(?:^${allowedChars}|${allowedChars}$)`;
+      return new RegExp(`(${leadingOrTrailing})`, "v").exec(s)?.[1];
     };
   }
 
