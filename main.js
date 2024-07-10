@@ -24,14 +24,16 @@ class App {
         },
       },
     },
-    ".ascii": {
-      mime: "text/x-ascii",
-      name: "plain-text",
-      types: {
-        art: {
-          name: "ASCII",
-        },
-      },
+    ".ascii": ".asc",
+    get(extension) {
+      while (
+        extension?.startsWith(".") &&
+        typeof(this[extension]) == "string" &&
+        extension != this[extension]
+      ) {
+        extension = this[extension];
+      }
+      return this[extension];
     },
   }; }
   get DEFAULT_EXTENSION() { return ".md"; }
@@ -90,7 +92,7 @@ class App {
   }
 
   get typeExtensionName() {
-    const extInfo = this.EXTENSION_INFO[this.typeExtension];
+    const extInfo = this.EXTENSION_INFO.get(this.typeExtension);
     return extInfo?.types?.[this.typeName]?.name || extInfo?.name || "";
   }
 
@@ -139,7 +141,7 @@ class App {
     Utils.formatFromAttribute(this.els.title.field, "placeholder", f => {
       return f.replace(
         "{0}",
-        this.EXTENSION_INFO[this.typeExtension]?.types?.[this.typeName]?.verbosePlaceholder
+        this.EXTENSION_INFO.get(this.typeExtension)?.types?.[this.typeName]?.verbosePlaceholder
           ? verboseTypeName : typeName,
       );
     });
@@ -263,7 +265,7 @@ class App {
         let filenameParts = file.name.split(".");
         typeExtension = "." + filenameParts[filenameParts.length - 1].toLowerCase();
       }
-      if (!Object.hasOwn(this.EXTENSION_INFO, typeExtension)) {
+      if (!this.EXTENSION_INFO.get(typeExtension)) {
         typeExtension = "";
       }
       if (typeName) {
@@ -311,7 +313,7 @@ class App {
       title = this.els.title.field.placeholder;
     }
     const contents = `${titleContents}${this.els.body.field.value}\n`;
-    const mime = this.EXTENSION_INFO[this.typeExtension]?.mime || "text/plain";
+    const mime = this.EXTENSION_INFO.get(this.typeExtension)?.mime || "text/plain";
 
     const url = URL.createObjectURL(new Blob(
       [contents], {type: `${mime}; charset=utf-8`}
