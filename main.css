@@ -25,6 +25,7 @@
   --font-family-monospace: "Roboto Mono", "Cousine", monospace;
   --font-feature-settings-main: "tnum" 1, "ss01" 1, "ss04" 1, "calt" 1;
   --font-feature-settings-monospace: normal;
+  color-scheme: light dark;
 }
 
 @supports (color: Field) {
