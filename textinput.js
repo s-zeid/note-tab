@@ -32,6 +32,7 @@ const element = class NTTextInputElement extends HTMLElement {
       display: inline-block; position: absolute; z-index: -1; margin: 0; padding: 0;
       width: 100%; height: 100%; min-height: var(--base-height);
       border: none; font: inherit; pointer-events: none; resize: none;
+      background: transparent;
     }
     [part~="placeholder"]:not([hidden]), [part~="placeholder"]::placeholder {
       color: inherit; opacity: 1;

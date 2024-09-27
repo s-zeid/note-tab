@@ -35,6 +35,13 @@
   }
 }
 
+@supports (color: Canvas) and (color: CanvasText) {
+  :root {
+    --color-background: Canvas;
+    --color-foreground: CanvasText;
+  }
+}
+
 @supports (color: -webkit-link) {
   :root {
     --color-active: -webkit-link;
